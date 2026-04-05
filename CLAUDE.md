@@ -14,6 +14,16 @@ There are two parallel implementations in this repo:
 | `redesign.html`, `empathy.html`, `strategy.html` | Design explorations and UX research documents |
 | `velo/` | Production implementation targeting **Wix Studio + Velo** (Wix's JS platform) |
 
+## Git Workflow
+
+Commit and push to GitHub regularly throughout work — after each meaningful change — so no progress is lost. Use clean, descriptive commit messages in English.
+
+```bash
+git add <files>
+git commit -m "short description of what changed"
+git push
+```
+
 ## Running Locally
 
 The standalone prototype requires no build step:
