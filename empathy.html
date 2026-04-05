@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>טבלת אמפתיה — אתגר 49</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F2EC;
+  --text: #2A2A35;
+  --mid: #7A7A8A;
+  --light: #C8C8D5;
+  --white: #FFFFFF;
+  --divider: rgba(42,42,53,0.08);
+
+  /* Stage colors */
+  --s1: #6B7BD4; /* כניסה */
+  --s2: #6BA898; /* הבנה */
+  --s3: #7A9E68; /* האתגר */
+  --s4: #9A88C8; /* תוכן */
+  --s5: #C89A60; /* השלמה */
+  --s6: #C8AA40; /* חזרה */
+
+  /* Emotion colors */
+  --feel-pos: #5BAD7A;
+  --feel-neu: #C89A60;
+  --feel-neg: #C47080;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);padding:32px 16px 80px;font-size:15px;line-height:1.6}
+.page{max-width:900px;margin:0 auto}
+
+h1{font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-0.5px}
+.subtitle{color:var(--mid);font-size:14px;margin-bottom:8px}
+.intro{font-size:14px;color:var(--mid);background:rgba(255,255,255,0.6);border-radius:14px;padding:14px 18px;margin-bottom:36px;line-height:1.7;border:1px solid var(--divider)}
+.persona-tag{display:inline-flex;align-items:center;gap:7px;background:white;border:1px solid var(--divider);border-radius:999px;padding:5px 14px;font-size:12px;font-weight:600;color:var(--mid);margin-bottom:20px}
+.persona-dot{width:7px;height:7px;border-radius:50%;background:#7A9E68}
+
+/* JOURNEY LINE */
+.journey{display:flex;gap:0;margin-bottom:36px;position:relative}
+.journey::before{content:'';position:absolute;top:22px;right:0;left:0;height:2px;background:linear-gradient(to left,var(--s6),var(--s5),var(--s4),var(--s3),var(--s2),var(--s1));opacity:0.25;z-index:0}
+.stage-dot-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1}
+.stage-dot{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;font-weight:700;flex-shrink:0}
+.stage-dot-label{font-size:11px;font-weight:700;color:var(--mid);text-align:center;line-height:1.3}
+
+/* EMPATHY GRID */
+.emp-grid{display:flex;flex-direction:column;gap:16px}
+.stage-card{background:white;border-radius:20px;overflow:hidden;box-shadow:0 2px 14px rgba(42,42,53,0.055);border:1px solid var(--divider)}
+.stage-header{padding:16px 20px;display:flex;align-items:center;gap:14px}
+.stage-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:14px;flex-shrink:0}
+.stage-title-wrap{}
+.stage-title{font-size:16px;font-weight:900}
+.stage-subtitle{font-size:12px;color:var(--mid);margin-top:1px}
+.stage-body{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;border-top:1px solid var(--divider)}
+.cell{padding:14px 16px;border-left:1px solid var(--divider)}
+.cell:last-child{border-left:none}
+.cell-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--light);margin-bottom:8px}
+.cell-items{display:flex;flex-direction:column;gap:5px}
+.chip{font-size:12px;padding:4px 10px;border-radius:999px;line-height:1.4;display:inline-flex;align-items:flex-start;gap:5px}
+.chip-pos{background:#EEF8F2;color:#3A7A50}
+.chip-neu{background:#FBF3E8;color:#8A6020}
+.chip-neg{background:#FBEEEf;color:#8A4050}
+.chip-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.chip-pos .chip-dot{background:#5BAD7A}
+.chip-neu .chip-dot{background:#C89A60}
+.chip-neg .chip-dot{background:#C47080}
+
+/* PAIN + OPPORTUNITY */
+.pain-opp{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--divider)}
+.po-cell{padding:12px 16px}
+.po-cell:first-child{border-left:1px solid var(--divider)}
+.po-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}
+.po-label.pain{color:#C47080}
+.po-label.opp{color:#5BAD7A}
+.po-item{font-size:12px;line-height:1.5;color:var(--mid);margin-bottom:5px;display:flex;gap:6px;align-items:flex-start}
+.po-bullet{flex-shrink:0;margin-top:4px;font-size:9px}
+.po-bullet.pain{color:#C47080}
+.po-bullet.opp{color:#5BAD7A}
+
+/* EMOTION BAR */
+.emotion-bar-wrap{padding:10px 20px;border-top:1px solid var(--divider);display:flex;align-items:center;gap:10px}
+.emo-label{font-size:10px;color:var(--mid);font-weight:600;white-space:nowrap}
+.emo-track{flex:1;height:6px;background:#F0EEE9;border-radius:999px;overflow:hidden}
+.emo-fill{height:100%;border-radius:999px;transition:width 0.5s}
+.emo-score{font-size:11px;font-weight:700;white-space:nowrap}
+
+/* SUMMARY */
+.summary{background:var(--text);border-radius:20px;padding:24px 22px;margin-top:32px;color:white}
+.summary h2{font-size:18px;font-weight:900;margin-bottom:16px}
+.fix-list{display:flex;flex-direction:column;gap:10px}
+.fix-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:rgba(255,255,255,0.06);border-radius:12px}
+.fix-prio{font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.fix-prio.high{background:rgba(196,112,128,0.35);color:#F4A0A8}
+.fix-prio.med{background:rgba(200,154,96,0.35);color:#E8C070}
+.fix-prio.low{background:rgba(91,173,122,0.35);color:#90D8A8}
+.fix-text{font-size:13px;line-height:1.55;color:rgba(255,255,255,0.8)}
+.fix-text strong{color:white}
+
+@media(max-width:640px){
+  .stage-body{grid-template-columns:1fr 1fr}
+  .cell:nth-child(2){border-left:none}
+  .cell:nth-child(3){border-top:1px solid var(--divider)}
+  .cell:nth-child(4){border-top:1px solid var(--divider)}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>טבלת אמפתיה — אתגר 49</h1>
+<p class="subtitle">מיפוי חוויית המשתמש לאורך המסע · 6 שלבים קריטיים</p>
+
+<div class="persona-tag">
+  <span class="persona-dot"></span>
+  פרסונה: דניאל, 22, בוגר מכינה · מובייל · מגיע בעקביות אך לפעמים שוכח
+</div>
+
+<div class="intro">
+  <strong>שיטה:</strong> עקבנו אחרי המשתמש משלב הכניסה הראשונה ועד לחזרה ביום השני. בכל שלב זיהינו: מה הוא עושה, חושב, מרגיש — ומה כואב לו. <br>
+  <strong>צבע הרגש:</strong> <span style="color:#5BAD7A;font-weight:600">■ חיובי</span> &nbsp;
+  <span style="color:#C89A60;font-weight:600">■ ניטרלי</span> &nbsp;
+  <span style="color:#C47080;font-weight:600">■ כאב/בעיה</span>
+</div>
+
+<!-- JOURNEY LINE -->
+<div class="journey">
+  <div class="stage-dot-wrap">
+    <div class="stage-dot" style="background:var(--s1)">1</div>
+    <div class="stage-dot-label">כניסה<br>ראשונה</div>
+  </div>
+  <div class="stage-dot-wrap">
+    <div class="stage-dot" style="background:var(--s2)">2</div>
+    <div class="stage-dot-label">הבנת<br>האתר</div>
+  </div>
+  <div class="stage-dot-wrap">
+    <div class="stage-dot" style="background:var(--s3)">3</div>
+    <div class="stage-dot-label">מציאת<br>היום</div>
+  </div>
+  <div class="stage-dot-wrap">
+    <div class="stage-dot" style="background:var(--s4)">4</div>
+    <div class="stage-dot-label">צריכת<br>התוכן</div>
+  </div>
+  <div class="stage-dot-wrap">
+    <div class="stage-dot" style="background:var(--s5)">5</div>
+    <div class="stage-dot-label">השלמת<br>האתגר</div>
+  </div>
+  <div class="stage-dot-wrap">
+    <div class="stage-dot" style="background:var(--s6)">6</div>
+    <div class="stage-dot-label">חזרה<br>למחרת</div>
+  </div>
+</div>
+
+<!-- ════════════ STAGE 1 ════════════ -->
+<div class="emp-grid">
+<div class="stage-card">
+  <div class="stage-header">
+    <div class="stage-num" style="background:var(--s1)">1</div>
+    <div class="stage-title-wrap">
+      <div class="stage-title">כניסה ראשונה לאתר</div>
+      <div class="stage-subtitle">המשתמש הגיע דרך המלצה / קישור מהמכינה</div>
+    </div>
+  </div>
+  <div class="stage-body">
+    <div class="cell">
+      <div class="cell-label">עושה</div>
+      <div class="cell-items">
+        <span class="chip chip-neu"><span class="chip-dot"></span>פותח קישור ממסרון</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>גולל מהיר למטה</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>מחפש "למה באתי"</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">חושב</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>"נראה מגניב"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"מה זה אתגר 49?"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"איפה מתחילים?"</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">מרגיש</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>סקרנות</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>אי-וודאות קלה</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>חוסר הכוונה</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">שומע / רואה</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>עיצוב נקי</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>אין CTA ברור</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>לא יודע היכן יום 1</span>
+      </div>
+    </div>
+  </div>
+  <div class="pain-opp">
+    <div class="po-cell">
+      <div class="po-label pain">⚠ כאב</div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>אין הסבר בגובה העיניים בשניות הראשונות — "מה האתר הזה עושה?"</span></div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>אין כפתור "התחל עכשיו" בולט בדף הבית</span></div>
+    </div>
+    <div class="po-cell">
+      <div class="po-label opp">✦ הזדמנות</div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>Hero section עם משפט אחד + כפתור "לאתגר של היום" יפתור 80% מהבלבול</span></div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>אנימציה קצרה שמסבירה "49 ימים · יום אחד בכל פעם"</span></div>
+    </div>
+  </div>
+  <div class="emotion-bar-wrap">
+    <span class="emo-label">עוצמת חוויה</span>
+    <div class="emo-track"><div class="emo-fill" style="width:45%;background:var(--s1)"></div></div>
+    <span class="emo-score" style="color:var(--s1)">4/10 — ניטרלי</span>
+  </div>
+</div>
+
+<!-- ════════════ STAGE 2 ════════════ -->
+<div class="stage-card">
+  <div class="stage-header">
+    <div class="stage-num" style="background:var(--s2)">2</div>
+    <div class="stage-title-wrap">
+      <div class="stage-title">הבנת האתר והמושג</div>
+      <div class="stage-subtitle">המשתמש מנסה להבין מה ספירת העומר ומה הקשר לחייו</div>
+    </div>
+  </div>
+  <div class="stage-body">
+    <div class="cell">
+      <div class="cell-label">עושה</div>
+      <div class="cell-items">
+        <span class="chip chip-neu"><span class="chip-dot"></span>קורא "קצת עלינו"</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>לוחץ "מבוא מתחילים"</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>רואה 7 עיגולי שבועות</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">חושב</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>"זה רעיון מעניין"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"זה דתי מדי בשבילי?"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"כמה זמן זה לוקח?"</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">מרגיש</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>עניין גובר</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>חשש מהתחייבות</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>שאלתיות</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">שומע / רואה</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>שפה אוניברסלית</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>מונחים כבדים בלי הסבר</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>ניווט מבלבל</span>
+      </div>
+    </div>
+  </div>
+  <div class="pain-opp">
+    <div class="po-cell">
+      <div class="po-label pain">⚠ כאב</div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>מונחים כמו "חסד שבחסד" ללא הסבר — מרגיש דתי/מורכב</span></div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>אין אמידה ברורה של "כמה מאמץ זה דורש ממני ביום?"</span></div>
+    </div>
+    <div class="po-cell">
+      <div class="po-label opp">✦ הזדמנות</div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>Tooltip קצר על כל מונח רוחני — "חסד = נתינה ואהבה ללא תנאי"</span></div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>"5 דקות ביום" — להיות שקוף לגבי ההשקעה הנדרשת</span></div>
+    </div>
+  </div>
+  <div class="emotion-bar-wrap">
+    <span class="emo-label">עוצמת חוויה</span>
+    <div class="emo-track"><div class="emo-fill" style="width:55%;background:var(--s2)"></div></div>
+    <span class="emo-score" style="color:var(--s2)">5.5/10 — מתחמם</span>
+  </div>
+</div>
+
+<!-- ════════════ STAGE 3 ════════════ -->
+<div class="stage-card">
+  <div class="stage-header">
+    <div class="stage-num" style="background:var(--s3)">3</div>
+    <div class="stage-title-wrap">
+      <div class="stage-title">מציאת האתגר של היום</div>
+      <div class="stage-subtitle">רגע הכניסה לתוכן — השלב הכי קריטי לשימור</div>
+    </div>
+  </div>
+  <div class="stage-body">
+    <div class="cell">
+      <div class="cell-label">עושה</div>
+      <div class="cell-items">
+        <span class="chip chip-neg"><span class="chip-dot"></span>מחפש "היום" בניווט</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>נכנס לדף שגוי</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>מגיע לבסוף ליום הנכון</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">חושב</div>
+      <div class="cell-items">
+        <span class="chip chip-neg"><span class="chip-dot"></span>"איפה אני בספירה?"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"מה יום הזה?"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"כבר לא בטוח שאחזיק"</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">מרגיש</div>
+      <div class="cell-items">
+        <span class="chip chip-neg"><span class="chip-dot"></span>תסכול</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>אובדן דרך</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>ספק עצמי</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">שומע / רואה</div>
+      <div class="cell-items">
+        <span class="chip chip-neg"><span class="chip-dot"></span>רשימת 49 עמודים</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>ניווט בלי היגיון</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>אין "האתגר של היום"</span>
+      </div>
+    </div>
+  </div>
+  <div class="pain-opp">
+    <div class="po-cell">
+      <div class="po-label pain">⚠ כאב — קריטי</div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>זהו שלב ה-DROP OFF הגדול ביותר — אין ניווט אוטומטי ליום הנוכחי</span></div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>המשתמש צריך לחשב בעצמו איזה יום זה — מאמץ מיותר לחלוטין</span></div>
+    </div>
+    <div class="po-cell">
+      <div class="po-label opp">✦ הזדמנות — גדולה</div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>דף הבית = האתגר של היום. נקודה. המשתמש לא צריך לחפש</span></div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>Deeplinking אוטומטי — כל קישור ממסרון מוביל ישירות ליום הנכון</span></div>
+    </div>
+  </div>
+  <div class="emotion-bar-wrap">
+    <span class="emo-label">עוצמת חוויה</span>
+    <div class="emo-track"><div class="emo-fill" style="width:20%;background:var(--s6-neg, #C47080)"></div></div>
+    <span class="emo-score" style="color:#C47080">2/10 — כאב אמיתי</span>
+  </div>
+</div>
+
+<!-- ════════════ STAGE 4 ════════════ -->
+<div class="stage-card">
+  <div class="stage-header">
+    <div class="stage-num" style="background:var(--s4)">4</div>
+    <div class="stage-title-wrap">
+      <div class="stage-title">צריכת התוכן</div>
+      <div class="stage-subtitle">קריאה, וידאו, שאלות לבחינה עצמית, שיר</div>
+    </div>
+  </div>
+  <div class="stage-body">
+    <div class="cell">
+      <div class="cell-label">עושה</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>קורא את האתגר</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>גולל דרך הטקסט</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>לפעמים מדלג וידאו</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">חושב</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>"זה נגע בי"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"הטקסט ארוך מדי"</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>"איפה הייתי אמור לעצור?"</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">מרגיש</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>השראה</span>
+        <span class="chip chip-pos"><span class="chip-dot"></span>חיבור לעצמי</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>עומס קוגניטיבי</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">שומע / רואה</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>תוכן עמוק ומשמעותי</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>בלוקים של טקסט בלתי נגמרים</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>אין הפרדה ויזואלית</span>
+      </div>
+    </div>
+  </div>
+  <div class="pain-opp">
+    <div class="po-cell">
+      <div class="po-label pain">⚠ כאב</div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>טקסט ארוך ללא "נקודות עצירה" — המשתמש לא יודע מתי יסיים</span></div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>אין מחוון קריאה ("קראת 60% מהתוכן של היום")</span></div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>שאלות הבחינה עצמית קבורות — לא מקבלות מקום של כבוד</span></div>
+    </div>
+    <div class="po-cell">
+      <div class="po-label opp">✦ הזדמנות</div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>Reading progress bar בתוך הסעיף — מוטיבציה להשלים</span></div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>פיצול ל"קריאה מהירה" (2 דק') vs "עמוק" (12 דק') — לפי מצב הרוח</span></div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>שאלות עם שדה כתיבה קצר — מעודד רפלקציה אקטיבית</span></div>
+    </div>
+  </div>
+  <div class="emotion-bar-wrap">
+    <span class="emo-label">עוצמת חוויה</span>
+    <div class="emo-track"><div class="emo-fill" style="width:72%;background:var(--s4)"></div></div>
+    <span class="emo-score" style="color:var(--s4)">7/10 — שיא המסע</span>
+  </div>
+</div>
+
+<!-- ════════════ STAGE 5 ════════════ -->
+<div class="stage-card">
+  <div class="stage-header">
+    <div class="stage-num" style="background:var(--s5)">5</div>
+    <div class="stage-title-wrap">
+      <div class="stage-title">השלמת האתגר</div>
+      <div class="stage-subtitle">הרגע של "עשיתי את זה" — הכי חשוב לשימור ארוך טווח</div>
+    </div>
+  </div>
+  <div class="stage-body">
+    <div class="cell">
+      <div class="cell-label">עושה</div>
+      <div class="cell-items">
+        <span class="chip chip-neg"><span class="chip-dot"></span>לא מוצא כפתור "סיימתי"</span>
+        <span class="chip chip-neu"><span class="chip-dot"></span>סוגר את הדפדפן</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>ממשיך בלי "סגירה"</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">חושב</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>"אני רוצה לשמר את זה"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"כלום לא מסמן שסיימתי"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"אשכח להחזיר מחר"</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">מרגיש</div>
+      <div class="cell-items">
+        <span class="chip chip-pos"><span class="chip-dot"></span>הישג פנימי</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>חוסר סגירה</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>ריקנות אחרי</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">שומע / רואה</div>
+      <div class="cell-items">
+        <span class="chip chip-neg"><span class="chip-dot"></span>אין אנימציה/חיזוק</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>אין "כל הכבוד"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>אין זיכרון ויזואלי</span>
+      </div>
+    </div>
+  </div>
+  <div class="pain-opp">
+    <div class="po-cell">
+      <div class="po-label pain">⚠ כאב — קריטי</div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>אין "loop closure" — הפסיכולוגיה של סגירת מעגל חיונית לשימור</span></div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>ללא חיזוק חיובי — אין סיבה לחזור מחר</span></div>
+    </div>
+    <div class="po-cell">
+      <div class="po-label opp">✦ הזדמנות — גדולה</div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>כפתור "עשיתי!" עם אנימציה + הודעת "יום X הושלם, X ימים ברצף" </span></div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>תזכורת לשמירת מייל: "רוצה לזכור לחזור מחר?" — תוצאה: רשימת תפוצה</span></div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>הצצה ליום הבא — "מחר: [שם האתגר]" — יוצר ציפייה</span></div>
+    </div>
+  </div>
+  <div class="emotion-bar-wrap">
+    <span class="emo-label">עוצמת חוויה</span>
+    <div class="emo-track"><div class="emo-fill" style="width:35%;background:#C47080"></div></div>
+    <span class="emo-score" style="color:#C47080">3.5/10 — נפילה מיותרת</span>
+  </div>
+</div>
+
+<!-- ════════════ STAGE 6 ════════════ -->
+<div class="stage-card">
+  <div class="stage-header">
+    <div class="stage-num" style="background:var(--s6)">6</div>
+    <div class="stage-title-wrap">
+      <div class="stage-title">חזרה ביום השני</div>
+      <div class="stage-subtitle">הרגע שקובע אם יש "ספירה" או רק ביקור חד-פעמי</div>
+    </div>
+  </div>
+  <div class="stage-body">
+    <div class="cell">
+      <div class="cell-label">עושה</div>
+      <div class="cell-items">
+        <span class="chip chip-neg"><span class="chip-dot"></span>שוכח לחזור</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>חוזר אחרי שקיעה</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>לא יודע עברו כמה ימים</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">חושב</div>
+      <div class="cell-items">
+        <span class="chip chip-neg"><span class="chip-dot"></span>"שכחתי אתמול"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"כבר מאוחר?"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>"אולי אוותר"</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">מרגיש</div>
+      <div class="cell-items">
+        <span class="chip chip-neg"><span class="chip-dot"></span>אשמה</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>הפסד / "נשברתי"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>ספק עצמי</span>
+      </div>
+    </div>
+    <div class="cell">
+      <div class="cell-label">שומע / רואה</div>
+      <div class="cell-items">
+        <span class="chip chip-neg"><span class="chip-dot"></span>אין תזכורת</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>אין "ברוך הבא חזרה"</span>
+        <span class="chip chip-neg"><span class="chip-dot"></span>אין הבנה של הפסד</span>
+      </div>
+    </div>
+  </div>
+  <div class="pain-opp">
+    <div class="po-cell">
+      <div class="po-label pain">⚠ כאב — קריטי</div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>אין שום מנגנון שמזכיר למשתמש לחזור — Drop off גבוה מאוד</span></div>
+      <div class="po-item"><span class="po-bullet pain">▸</span><span>אין הבחנה בין "פספסתי" ל"עדיין בזמן" לפי שעת השקיעה</span></div>
+    </div>
+    <div class="po-cell">
+      <div class="po-label opp">✦ הזדמנות</div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>מייל תזכורת יומי בבוקר — "יום X מחכה לך. האתגר של היום: [שם]"</span></div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>"גם אם פספסת יום — אפשר להמשיך. המסע שלך, הקצב שלך"</span></div>
+      <div class="po-item"><span class="po-bullet opp">▸</span><span>Streak ללא ענישה — יום שפספס = אפור, לא "אפס"</span></div>
+    </div>
+  </div>
+  <div class="emotion-bar-wrap">
+    <span class="emo-label">עוצמת חוויה</span>
+    <div class="emo-track"><div class="emo-fill" style="width:15%;background:#C47080"></div></div>
+    <span class="emo-score" style="color:#C47080">1.5/10 — שלב האיבוד</span>
+  </div>
+</div>
+
+</div><!-- end emp-grid -->
+
+<!-- SUMMARY -->
+<div class="summary">
+  <h2>🔧 מה לתקן — לפי עדיפות</h2>
+  <div class="fix-list">
+    <div class="fix-item">
+      <span class="fix-prio high">דחוף</span>
+      <span class="fix-text"><strong>דף הבית = האתגר של היום.</strong> ביטול חיפוש — המשתמש נוחת ישר על התוכן. שלב 3 הורג את הרצון להישאר.</span>
+    </div>
+    <div class="fix-item">
+      <span class="fix-prio high">דחוף</span>
+      <span class="fix-text"><strong>כפתור "עשיתי" + אנימציה + הצצה ליום הבא.</strong> בלי loop closure אין סיבה לחזור. שלב 5 הוא פצצת retention.</span>
+    </div>
+    <div class="fix-item">
+      <span class="fix-prio high">דחוף</span>
+      <span class="fix-text"><strong>מייל תזכורת יומי.</strong> אחרי לחיצת "עשיתי" — שדה מייל אחד. "שלח לי תזכורת מחר". זה גם בונה רשימת תפוצה לשנה הבאה.</span>
+    </div>
+    <div class="fix-item">
+      <span class="fix-prio med">חשוב</span>
+      <span class="fix-text"><strong>Tooltip על מונחים רוחניים.</strong> "חסד שבחסד" — לחיצה מגלה הסבר בגובה העיניים. מפחית חיכוך לקהל החילוני.</span>
+    </div>
+    <div class="fix-item">
+      <span class="fix-prio med">חשוב</span>
+      <span class="fix-text"><strong>פיצול תוכן: "קצר / עמוק".</strong> "2 דק'" vs "12 דק'" — מאפשר גמישות לפי מצב הרוח. מוריד עומס.</span>
+    </div>
+    <div class="fix-item">
+      <span class="fix-prio low">שיפור</span>
+      <span class="fix-text"><strong>Streak ללא ענישה.</strong> יום שהוחמץ = עיגול אפור — לא אדום. שפת עידוד לא שפת כישלון. מתאים לאווירת האתר.</span>
+    </div>
+    <div class="fix-item">
+      <span class="fix-prio low">שיפור</span>
+      <span class="fix-text"><strong>שאלות לבחינה עצמית עם שדה כתיבה.</strong> לא חובה — אבל מגדיל משמעותית את ה-engagement ואת הערך שהמשתמש מרגיש.</span>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

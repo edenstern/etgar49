@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אתגר 49 — מסמך אסטרטגיה מלא</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:   #1A1A24;
+  --mid:   #6A6A7A;
+  --soft:  #AAААBB;
+  --rule:  rgba(26,26,36,0.09);
+  --paper: #F2EFE8;
+  --white: #FFFFFF;
+  --g1: #2E9B55; --g7: #CCA230;
+  --blue: #3535D4;
+  --pos: #2E7D52; --pos-bg: #E8F5EE;
+  --neg: #8A3040; --neg-bg: #FAE8EC;
+  --neu: #6A5800; --neu-bg: #F8F2DC;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Heebo',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;font-size:15px}
+.page{max-width:860px;margin:0 auto;padding:48px 28px 100px}
+
+/* typography */
+h1{font-size:clamp(32px,5vw,48px);font-weight:900;letter-spacing:-1.5px;line-height:1.08;margin-bottom:8px}
+h2{font-size:22px;font-weight:900;letter-spacing:-.5px;margin:48px 0 18px;padding-top:48px;border-top:1px solid var(--rule)}
+h2:first-of-type{border-top:none;margin-top:0}
+h3{font-size:15px;font-weight:700;margin:24px 0 8px}
+p{font-weight:300;color:var(--mid);margin-bottom:12px;max-width:640px}
+p strong{color:var(--ink);font-weight:700}
+.lead{font-size:18px;font-weight:300;color:var(--mid);max-width:580px;line-height:1.75;margin-bottom:0}
+.kicker{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--soft);margin-bottom:12px}
+
+/* layout helpers */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:640px){.row,.row3{grid-template-columns:1fr}}
+
+/* cards */
+.card{background:var(--white);border-radius:18px;padding:22px;border:1px solid var(--rule)}
+.card h3{margin-top:0}
+.card-accent{border-right:3px solid var(--g1)}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:8px}
+.tag-pos{background:var(--pos-bg);color:var(--pos)}
+.tag-neg{background:var(--neg-bg);color:var(--neg)}
+.tag-neu{background:var(--neu-bg);color:var(--neu)}
+
+/* persona */
+.persona{background:var(--white);border-radius:18px;padding:24px;border:1px solid var(--rule);position:relative;overflow:hidden}
+.persona::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%}
+.p1::before{background:var(--g1)} .p2::before{background:#6B7BD4} .p3::before{background:var(--g7)}
+.persona-name{font-size:20px;font-weight:900;margin-bottom:2px}
+.persona-role{font-size:12px;color:var(--mid);margin-bottom:16px}
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.p-cell{background:var(--paper);border-radius:10px;padding:10px 12px}
+.p-cell-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-bottom:5px}
+.p-cell-text{font-size:13px;font-weight:300;color:var(--ink);line-height:1.55}
+
+/* empathy */
+.emp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media(max-width:640px){.emp-grid{grid-template-columns:1fr}}
+.emp-cell{background:var(--white);border-radius:14px;padding:16px;border:1px solid var(--rule)}
+.emp-icon{font-size:20px;margin-bottom:8px}
+.emp-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-bottom:8px}
+.emp-items{list-style:none;display:flex;flex-direction:column;gap:5px}
+.emp-items li{font-size:13px;font-weight:300;color:var(--ink);padding-right:12px;position:relative;line-height:1.45}
+.emp-items li::before{content:'–';position:absolute;right:0;color:var(--soft)}
+
+/* flow */
+.flow{display:flex;flex-direction:column;gap:0;margin:16px 0}
+.flow-step{display:flex;gap:16px;padding:0 0 28px}
+.flow-step:last-child{padding-bottom:0}
+.flow-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:36px}
+.flow-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:white;flex-shrink:0}
+.flow-line{flex:1;width:1px;background:var(--rule);margin-top:6px}
+.flow-step:last-child .flow-line{display:none}
+.flow-content{padding-top:6px;flex:1}
+.flow-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.flow-feel{font-size:11px;font-weight:600;color:var(--mid);margin-bottom:4px}
+.flow-needs{font-size:13px;font-weight:300;color:var(--mid);line-height:1.6}
+.flow-ui{font-size:12px;font-weight:600;margin-top:8px;padding:8px 12px;background:var(--paper);border-radius:8px;color:var(--ink);border-right:2px solid var(--g1)}
+
+/* copy */
+.copy-row{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);border-radius:14px;overflow:hidden;margin-bottom:10px}
+.copy-before,.copy-after{padding:14px 16px}
+.copy-before{background:rgba(200,50,50,.04);border-left:1px solid var(--rule)}
+.copy-after{background:rgba(46,155,85,.04)}
+.copy-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--soft);margin-bottom:6px}
+.copy-text{font-size:15px;font-weight:400;color:var(--ink)}
+.copy-before .copy-text{text-decoration:line-through;color:var(--mid);font-weight:300}
+.copy-note{font-size:11px;color:var(--mid);margin-top:4px;font-weight:300}
+
+/* colour system */
+.colour-row{display:flex;gap:8px;margin:14px 0}
+.colour-swatch{flex:1;border-radius:10px;overflow:hidden}
+.colour-top{height:44px}
+.colour-bottom{height:12px;opacity:.3}
+.colour-info{padding:8px 10px;background:var(--white);border:1px solid var(--rule);border-top:none;border-radius:0 0 10px 10px}
+.colour-name{font-size:10px;font-weight:700;color:var(--ink)}
+.colour-hex{font-size:9px;color:var(--mid);font-family:monospace}
+.colour-desc{font-size:10px;color:var(--mid);margin-top:2px}
+
+/* screen anatomy */
+.anatomy{background:var(--white);border:1px solid var(--rule);border-radius:18px;overflow:hidden;max-width:360px;margin:0 auto}
+.anatomy-hdr{background:#EAF5EE;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--rule)}
+.anat-row{padding:10px 14px;border-bottom:1px solid var(--rule);display:flex;align-items:flex-start;gap:10px}
+.anat-row:last-child{border-bottom:none}
+.anat-num{width:20px;height:20px;border-radius:50%;background:var(--g1);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.anat-label{font-size:12px;font-weight:700;margin-bottom:2px}
+.anat-why{font-size:11px;font-weight:300;color:var(--mid);line-height:1.5}
+
+/* action plan */
+.action-row{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:var(--white);border-radius:12px;border:1px solid var(--rule);margin-bottom:8px}
+.prio{font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:99px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.prio-1{background:#FAE8EC;color:#8A3040}
+.prio-2{background:#F8F2DC;color:#6A5800}
+.prio-3{background:#E8F5EE;color:#2E7D52}
+.action-text{font-size:13px;font-weight:300;color:var(--mid);line-height:1.6}
+.action-text strong{color:var(--ink);font-weight:700}
+
+/* divider */
+.rule-line{height:1px;background:var(--rule);margin:40px 0}
+.insight-box{background:var(--ink);color:white;border-radius:18px;padding:28px 24px;margin:24px 0}
+.insight-box h3{color:white;font-size:18px;margin-bottom:8px}
+.insight-box p{color:rgba(255,255,255,.65);max-width:100%;margin:0}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div style="margin-bottom:40px">
+  <div class="kicker">מסמך אסטרטגיה · אתגר 49 · 2026</div>
+  <h1>Redesign Lead<br>Document</h1>
+  <p class="lead">חשיבה מלאה — מהאסטרטגיה עד לפרטים הקטנים ביותר. מסמך זה מוביל את כל החלטות העיצוב, הזרימה, התוכן, והחוויה.</p>
+</div>
+
+<!-- INSIGHT -->
+<div class="insight-box">
+  <h3>התובנה המרכזית</h3>
+  <p>אתגר 49 הוא לא אפליקציית אתגרים. הוא לא כלי פרודוקטיביות. הוא לא תוכן דתי.</p>
+  <p style="margin-top:10px">הוא <strong style="color:white">מיכל לחזרה יומית</strong>. מרחב טקסי שמחזיק אדם במסע פנימי של 49 ימים. כמו ספר תפילה שיודע איזה יום זה.</p>
+  <p style="margin-top:10px">פעולת הליבה של המשתמש: <strong style="color:white">"הייתי כאן היום."</strong> הכל מסביב צריך לשרת את הרגע הזה.</p>
+</div>
+
+<!-- ════ PERSONAS ════ -->
+<h2>פרסונות משתמשים</h2>
+<p>לא פרסונות שטחיות — אנשים אמיתיים עם מניעים פנימיים, פחדים, ותנאים לאמון.</p>
+
+<div class="row3">
+  <div class="persona p1">
+    <div class="persona-name">דנה, 27</div>
+    <div class="persona-role">מחנכת בחינוך בלתי-פורמלי</div>
+    <p style="font-size:13px;max-width:100%">"אני רוצה להיות טובה יותר אבל אני לא יודעת מאיפה מתחילים."</p>
+    <div class="persona-grid">
+      <div class="p-cell"><div class="p-cell-label">מחפשת</div><div class="p-cell-text">עומק ללא דוגמה דתית. חיבור לזהות יהודית מבלי להרגיש "דתייה".</div></div>
+      <div class="p-cell"><div class="p-cell-label">חוששת</div><div class="p-cell-text">שזה ייראה קיטשי, דתי מדי, או שתרגיש אשמה אם תפספס.</div></div>
+      <div class="p-cell"><div class="p-cell-label">תישאר אם</div><div class="p-cell-text">זה ירגיש כמו יד חמה, לא מורה מאיים.</div></div>
+      <div class="p-cell"><div class="p-cell-label">תעזוב אם</div><div class="p-cell-text">הממשק ידרוש ממנה יותר מדי, או יגרום לה להרגיש נכשלת.</div></div>
+    </div>
+  </div>
+  <div class="persona p2">
+    <div class="persona-name">יואב, 21</div>
+    <div class="persona-role">בוגר מכינה, לפני אוניברסיטה</div>
+    <p style="font-size:13px;max-width:100%">"אני מחפש משהו אמיתי אבל לא מוכן לאתר שנראה כמו 2004."</p>
+    <div class="persona-grid">
+      <div class="p-cell"><div class="p-cell-label">מחפש</div><div class="p-cell-text">משמעות אמיתית, ממשק שנראה cool, תחושת קהילה שקטה.</div></div>
+      <div class="p-cell"><div class="p-cell-label">חוששת</div><div class="p-cell-text">שזה "לזקנים" או "לדתיים". שהוא יתחיל ולא יחזיר.</div></div>
+      <div class="p-cell"><div class="p-cell-label">תישאר אם</div><div class="p-cell-text">הרצף הויזואלי יגרום לו להרגיש הישג. Streak = גאווה.</div></div>
+      <div class="p-cell"><div class="p-cell-label">תעזוב אם</div><div class="p-cell-text">הממשק ייראה מיושן, או הניווט יבלבל אותו.</div></div>
+    </div>
+  </div>
+  <div class="persona p3">
+    <div class="persona-name">רחל, 44</div>
+    <div class="persona-role">מנהלת בית ספר, אם לשלושה</div>
+    <p style="font-size:13px;max-width:100%">"יש לי עשר דקות ביום. אם הן מספיקות — אני בפנים."</p>
+    <div class="persona-grid">
+      <div class="p-cell"><div class="p-cell-label">מחפשת</div><div class="p-cell-text">עומק בפורמט קומפקטי. תוכן שאפשר לשתף עם אחרים.</div></div>
+      <div class="p-cell"><div class="p-cell-label">חוששת</div><div class="p-cell-text">עוד אפליקציה לנהל. תוכן שקורא לה "להשקיע שעה".</div></div>
+      <div class="p-cell"><div class="p-cell-label">תישאר אם</div><div class="p-cell-text">תרגיש שהאתר מכבד את זמנה. 5 דקות = ערך אמיתי.</div></div>
+      <div class="p-cell"><div class="p-cell-label">שגרירה אם</div><div class="p-cell-text">תוכן שיגרום לה לשלוח לחברות. "הייתי חייבת לשתף את זה".</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ EMPATHY MAP ════ -->
+<h2>מפת אמפתיה — המשתמש העיקרי</h2>
+<p>קומפוזיט של שלוש הפרסונות. מה שמאחד אותן יותר ממה שמפריד.</p>
+
+<div class="emp-grid">
+  <div class="emp-cell">
+    <div class="emp-icon">💭</div>
+    <div class="emp-label">חושב</div>
+    <ul class="emp-items">
+      <li>"האם אני מסוגל להתחייב ל-49 יום?"</li>
+      <li>"מה זה אומר עלי אם אפספס יום?"</li>
+      <li>"האם זה מתאים לי — לא רק לדתיים?"</li>
+      <li>"כמה זמן זה לוקח ביום?"</li>
+    </ul>
+  </div>
+  <div class="emp-cell">
+    <div class="emp-icon">❤️</div>
+    <div class="emp-label">מרגיש</div>
+    <ul class="emp-items">
+      <li>סקרנות מעורבת בספקנות</li>
+      <li>קצת מוצף מהמחויבות</li>
+      <li>תקווה שזה "יעשה משהו"</li>
+      <li>אי-נוחות עם מושגים שלא מכיר</li>
+    </ul>
+  </div>
+  <div class="emp-cell">
+    <div class="emp-icon">👀</div>
+    <div class="emp-label">רואה</div>
+    <ul class="emp-items">
+      <li>עיצוב שנראה נקי אבל לא מסביר</li>
+      <li>49 עמודים — לא יודע מאיפה להתחיל</li>
+      <li>מונחים כמו "חסד שבחסד"</li>
+      <li>חברים שמדברים על האתגר</li>
+    </ul>
+  </div>
+  <div class="emp-cell">
+    <div class="emp-icon">🔥</div>
+    <div class="emp-label">טריגרים לכניסה</div>
+    <ul class="emp-items">
+      <li>חבר/ה ששלח/ה קישור</li>
+      <li>הפסח מגיע — תחושת "שנה חדשה"</li>
+      <li>רצון לשנות משהו</li>
+      <li>מחנה/מכינה שממליצה</li>
+    </ul>
+  </div>
+  <div class="emp-cell">
+    <div class="emp-icon">🚧</div>
+    <div class="emp-label">חסמים לחזרה</div>
+    <ul class="emp-items">
+      <li>שכחה — אין תזכורת</li>
+      <li>בלבול "איזה יום אני?"</li>
+      <li>אשמה על פספוס</li>
+      <li>תוכן שלוקח יותר מ-10 דקות</li>
+    </ul>
+  </div>
+  <div class="emp-cell">
+    <div class="emp-icon">✨</div>
+    <div class="emp-label">רגעי אמון</div>
+    <ul class="emp-items">
+      <li>כשהתוכן נוגע ברגע אמיתי בחייו</li>
+      <li>כשהאתגר קצר אך עמוק</li>
+      <li>כשאין שיפוטיות — רק הזמנה</li>
+      <li>כשהעיצוב "מכבד אותו"</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════ VALUE PROP ════ -->
+<h2>הצעת ערך מנוסחת מחדש</h2>
+
+<div class="insight-box">
+  <h3>המשפט שמגדיר הכל</h3>
+  <p style="font-size:18px;color:white;font-weight:300;line-height:1.7">
+    "49 ימים. 49 הזדמנויות לשנות משהו קטן בעצמך.<br>
+    מפסח — שנכנסים לחירות — עד שבועות — שמקבלים תורה.<br>
+    יום אחד. ערב אחד. אתגר אחד."
+  </p>
+</div>
+
+<div class="row">
+  <div class="card">
+    <span class="tag tag-pos">מה מציעים</span>
+    <h3>מיכל לחזרה יומית</h3>
+    <p style="max-width:100%;font-size:13px">לא "אתגר של 49 ימים" — אלא מקום שמחכה לך כל ערב. שקט, עמוק, לא שופט. מסע פנימי בקצב שלך.</p>
+  </div>
+  <div class="card">
+    <span class="tag tag-neu">מה NOT מציעים</span>
+    <h3>לא עוד אפליקציה</h3>
+    <p style="max-width:100%;font-size:13px">לא תוכן דתי כבד. לא רשימת משימות. לא מערכת שמענישה על פספוס. לא כלי פרודוקטיביות.</p>
+  </div>
+</div>
+
+<!-- ════ USER FLOW ════ -->
+<h2>זרימת משתמש — מחדש</h2>
+<p>כל שלב: מה המשתמש מרגיש, מה הוא צריך לראות, ומה ה-UI עושה.</p>
+
+<div class="flow">
+  <div class="flow-step">
+    <div class="flow-left"><div class="flow-num" style="background:#2E9B55">1</div><div class="flow-line"></div></div>
+    <div class="flow-content">
+      <div class="flow-title">כניסה ראשונה</div>
+      <div class="flow-feel">מרגיש: סקרן + לא בטוח</div>
+      <div class="flow-needs">צריך לראות: מה זה בשורה אחת. לא רשימת features.</div>
+      <div class="flow-ui">UI: Hero עם משפט אחד + כפתור "מה זה?" + כפתור "להתחיל". לא יותר מ-3 אלמנטים בתצוגה הראשונה.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-left"><div class="flow-num" style="background:#3E9E38">2</div><div class="flow-line"></div></div>
+    <div class="flow-content">
+      <div class="flow-title">הבנת הערך (onboarding)</div>
+      <div class="flow-feel">מרגיש: "אולי זה בשבילי"</div>
+      <div class="flow-needs">צריך להבין: 49 יום, יום אחד בכל ערב, לא צריך להיות דתי.</div>
+      <div class="flow-ui">UI: 3 מסכי onboarding swipeable — "מה?", "למי?", "איך?". כל אחד = 1 משפט + ויזואל.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-left"><div class="flow-num" style="background:#5EA020">3</div><div class="flow-line"></div></div>
+    <div class="flow-content">
+      <div class="flow-title">מציאת היום — אפס חיכוך</div>
+      <div class="flow-feel">מרגיש: "איפה אני?"</div>
+      <div class="flow-needs">צריך: האתגר של היום ישר בפנים. לא לחפש.</div>
+      <div class="flow-ui">UI: דף הבית = יום הנוכחי. אוטומטי לפי תאריך. אין ניווט ידני. לחיצה אחת = כניסה לתוכן.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-left"><div class="flow-num" style="background:#7E9E10">4</div><div class="flow-line"></div></div>
+    <div class="flow-content">
+      <div class="flow-title">חוויית תוכן היום</div>
+      <div class="flow-feel">מרגיש: "זה נוגע בי"</div>
+      <div class="flow-needs">צריך: היררכיה ברורה. האתגר ראשון, עומק אחר כך.</div>
+      <div class="flow-ui">UI: כרטיס אתגר בולט → ואז video/קריאה/שאלות/שיר כ-accordions. כל section = פועל אחד ("להעמיק", "לשאול", "לשמוע").</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-left"><div class="flow-num" style="background:#A09A10">5</div><div class="flow-line"></div></div>
+    <div class="flow-content">
+      <div class="flow-title">סיום — loop closure</div>
+      <div class="flow-feel">מרגיש: "עשיתי משהו"</div>
+      <div class="flow-needs">צריך: אישור. לא כלי — רגש. תחושת מעגל שנסגר.</div>
+      <div class="flow-ui">UI: כפתור "הייתי כאן" → אנימציה קטנה + "יום X ברצף" + הצצה לאתגר מחר → לחץ לסגור.</div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-left"><div class="flow-num" style="background:#CCA230">6</div><div class="flow-line"></div></div>
+    <div class="flow-content">
+      <div class="flow-title">חזרה יומית</div>
+      <div class="flow-feel">מרגיש: "אני רוצה לחזור"</div>
+      <div class="flow-needs">צריך: תזכורת אפקטיבית, כניסה ללא חיכוך.</div>
+      <div class="flow-ui">UI: אחרי "הייתי כאן" → "תרצה תזכורת מחר?" → מייל אחד. לינק מחר = ישר ליום הנכון.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ UX WRITING ════ -->
+<h2>מערכת Copy — שכתוב מלא</h2>
+<p>כל מילה שנשארת חייבת להרוויח את מקומה. עקרון: <strong>פחות, עמוק יותר.</strong></p>
+
+<div class="copy-row">
+  <div class="copy-before"><div class="copy-label">לפני</div><div class="copy-text">עשיתי את האתגר היום</div></div>
+  <div class="copy-after"><div class="copy-label">אחרי</div><div class="copy-text">הייתי כאן</div><div class="copy-note">שתי מילים. אומרות הכל. לא "השלמתי משימה" — "הייתי נוכח".</div></div>
+</div>
+<div class="copy-row">
+  <div class="copy-before"><div class="copy-label">לפני</div><div class="copy-text">קריאה מעמיקה</div></div>
+  <div class="copy-after"><div class="copy-label">אחרי</div><div class="copy-text">להעמיק</div><div class="copy-note">פועל. מזמין לפעולה, לא מתאר תוכן. מרגיש אנושי.</div></div>
+</div>
+<div class="copy-row">
+  <div class="copy-before"><div class="copy-label">לפני</div><div class="copy-text">שאלות לבחינה עצמית</div></div>
+  <div class="copy-after"><div class="copy-label">אחרי</div><div class="copy-text">לשאול את עצמי</div><div class="copy-note">פנימי. אינטימי. לא מוסדי.</div></div>
+</div>
+<div class="copy-row">
+  <div class="copy-before"><div class="copy-label">לפני</div><div class="copy-text">שיר היום</div></div>
+  <div class="copy-after"><div class="copy-label">אחרי</div><div class="copy-text">לשמוע</div><div class="copy-note">פשוט. ממוקד. מזמין.</div></div>
+</div>
+<div class="copy-row">
+  <div class="copy-before"><div class="copy-label">לפני</div><div class="copy-text">יום 25 הושלם — כל הכבוד!</div></div>
+  <div class="copy-after"><div class="copy-label">אחרי</div><div class="copy-text">הייתי כאן · יום כ״ה</div><div class="copy-note">גמטריה עברית = נפשי יותר. ללא קריאת התפעלות.</div></div>
+</div>
+<div class="copy-row">
+  <div class="copy-before"><div class="copy-label">לפני</div><div class="copy-text">שקיעה בעוד 03:22:17</div></div>
+  <div class="copy-after"><div class="copy-label">אחרי</div><div class="copy-text">03:22 · עד שקיעה</div><div class="copy-note">הזמן קודם. המילים אחרי. שקט ויזואלי.</div></div>
+</div>
+<div class="copy-row">
+  <div class="copy-before"><div class="copy-label">לפני</div><div class="copy-text">רצף של 24 ימים רצופים</div></div>
+  <div class="copy-after"><div class="copy-label">אחרי</div><div class="copy-text">24 ימים ברצף ·</div><div class="copy-note">הנקודה (·) כמו עוד יום מחכה. פחות מחיאות כפיים.</div></div>
+</div>
+<div class="copy-row">
+  <div class="copy-before"><div class="copy-label">לפני</div><div class="copy-text">מבוא מתחילים</div></div>
+  <div class="copy-after"><div class="copy-label">אחרי</div><div class="copy-text">מה זה?</div><div class="copy-note">שאלה ישירה = פחות מפחידה מ"מבוא".</div></div>
+</div>
+
+<!-- ════ COLOUR SYSTEM ════ -->
+<h2>מערכת צבעים — פסח לשבועות</h2>
+<p><strong>הנרטיב:</strong> שדה חיטה שצומח מפסח. ירוק פסח שמצהיב לאיטו עד לזהב הקציר בשבועות. <strong>הצבע הוא ההתקדמות.</strong></p>
+
+<div class="colour-row">
+  <div class="colour-swatch"><div class="colour-top" style="background:#2E9B55"></div><div class="colour-bottom" style="background:#2E9B55;opacity:.15;height:6px"></div><div class="colour-info"><div class="colour-name">שבוע 1 · חסד</div><div class="colour-hex">#2E9B55</div><div class="colour-desc">ירוק פסח · צמיחה</div></div></div>
+  <div class="colour-swatch"><div class="colour-top" style="background:#3E9E38"></div><div class="colour-info"><div class="colour-name">שבוע 2 · גבורה</div><div class="colour-hex">#3E9E38</div><div class="colour-desc">עשב · חיות</div></div></div>
+  <div class="colour-swatch"><div class="colour-top" style="background:#5EA020"></div><div class="colour-info"><div class="colour-name">שבוע 3 · תפארת</div><div class="colour-hex">#5EA020</div><div class="colour-desc">ירוק-צהוב</div></div></div>
+  <div class="colour-swatch"><div class="colour-top" style="background:#7E9E10"></div><div class="colour-info"><div class="colour-name">שבוע 4 · נצח</div><div class="colour-hex">#7E9E10</div><div class="colour-desc">זית-זהב</div></div></div>
+  <div class="colour-swatch"><div class="colour-top" style="background:#A09A10"></div><div class="colour-info"><div class="colour-name">שבוע 5 · הוד</div><div class="colour-hex">#A09A10</div><div class="colour-desc">זהב-ירוק</div></div></div>
+  <div class="colour-swatch"><div class="colour-top" style="background:#C09418"></div><div class="colour-info"><div class="colour-name">שבוע 6 · יסוד</div><div class="colour-hex">#C09418</div><div class="colour-desc">ענבר</div></div></div>
+  <div class="colour-swatch"><div class="colour-top" style="background:#CCA230"></div><div class="colour-info"><div class="colour-name">שבוע 7 · מלכות</div><div class="colour-hex">#CCA230</div><div class="colour-desc">זהב קמה 🌾</div></div></div>
+</div>
+
+<!-- ════ SCREEN ANATOMY ════ -->
+<h2>אנטומיה של מסך היום</h2>
+<p>כל רכיב — למה הוא קיים, מה תפקידו, ומה קורה בלעדיו.</p>
+
+<div style="display:grid;grid-template-columns:360px 1fr;gap:28px;align-items:start">
+  <div class="anatomy">
+    <div class="anatomy-hdr" style="font-size:11px;color:var(--mid)">מסך יום · מובייל</div>
+    <div class="anat-row"><span class="anat-num">1</span><div><div class="anat-label">Header ambient</div><div class="anat-why">לוגו + יום + ספירה. Sticky אך "בלתי נראה". לא מתחרה בתוכן.</div></div></div>
+    <div class="anat-row"><span class="anat-num">2</span><div><div class="anat-label">Sunset beat</div><div class="anat-why">הלב של האתגר — אבל אמביינט, לא דומיננטי. קו אחד. זמן + פס. גולל ונעלם.</div></div></div>
+    <div class="anat-row"><span class="anat-num">3</span><div><div class="anat-label">Week context pill</div><div class="anat-why">איפה אני בספירה. Anchors the user. קטן, לא intrusive.</div></div></div>
+    <div class="anat-row"><span class="anat-num">4</span><div><div class="anat-label">Hero title — גדול</div><div class="anat-why">שם האתגר הוא הכוכב. גדול, אמיץ, נושם. הטיפוגרפיה היא העיצוב.</div></div></div>
+    <div class="anat-row"><span class="anat-num">5</span><div><div class="anat-label">Challenge card</div><div class="anat-why">מה לעשות בפועל. קצר. חד. כל מה שצריך לדעת.</div></div></div>
+    <div class="anat-row"><span class="anat-num">6</span><div><div class="anat-label">Content stack</div><div class="anat-why">Video → להעמיק → לשאול → לשמוע. כל אחד אופציונלי. Accordions. אחד בכל פעם.</div></div></div>
+    <div class="anat-row"><span class="anat-num">7</span><div><div class="anat-label">כפתור "הייתי כאן"</div><div class="anat-why">Loop closure. הפעולה הכי חשובה. גדול, ברור, מתגמל.</div></div></div>
+    <div class="anat-row"><span class="anat-num">8</span><div><div class="anat-label">מחר peek</div><div class="anat-why">מכין ציפייה. שם האתגר של מחר = סיבה לחזור. מופיע אחרי "הייתי כאן".</div></div></div>
+    <div class="anat-row"><span class="anat-num">9</span><div><div class="anat-label">Week switcher</div><div class="anat-why">ניווט בין שבועות. Bottom bar. Editorial, לא widget. נרטיב הצבע נראה כאן.</div></div></div>
+  </div>
+
+  <div>
+    <h3>עקרונות UI ממשיים</h3>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="card"><strong>Touch targets:</strong> מינימום 44×44px. כפתור "הייתי כאן" = full-width, 56px גובה.</div>
+      <div class="card"><strong>עומס קוגניטיבי:</strong> לא יותר מ-2 אלמנטים interactable בתצוגה ראשונה.</div>
+      <div class="card"><strong>Scanability:</strong> כל section title = פועל אחד. לא ביטוי. לא משפט.</div>
+      <div class="card"><strong>ריווח:</strong> 8px base unit. Padding גדול = תחושת premium. לא לדחוס.</div>
+      <div class="card"><strong>טיפוגרפיה:</strong> 900 weight לכותרות, 300 לגוף. הניגוד הוא הדיוק.</div>
+      <div class="card"><strong>Mobile ergonomics:</strong> כל CTA = בתחתית המסך. תצמיד לאגודל, לא לראש.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ ACTION PLAN ════ -->
+<h2>תוכנית פעולה — לפי עדיפות</h2>
+
+<div class="action-row"><span class="prio prio-1">דחוף</span><div class="action-text"><strong>דף הבית = האתגר של היום.</strong> המשתמש נוחת על התוכן. אוטומטי לפי תאריך.</div></div>
+<div class="action-row"><span class="prio prio-1">דחוף</span><div class="action-text"><strong>כפתור "הייתי כאן" + מחר peek.</strong> Loop closure = הסיבה לחזור מחר.</div></div>
+<div class="action-row"><span class="prio prio-1">דחוף</span><div class="action-text"><strong>תזכורת מייל.</strong> אחרי "הייתי כאן" → שדה מייל אחד. "שלח לי תזכורת מחר."</div></div>
+<div class="action-row"><span class="prio prio-2">חשוב</span><div class="action-text"><strong>שכתוב copy מלא.</strong> "הייתי כאן", "להעמיק", "לשאול", "לשמוע". כל טקסט מחדש.</div></div>
+<div class="action-row"><span class="prio prio-2">חשוב</span><div class="action-text"><strong>Tooltip על מונחים.</strong> "חסד שבחסד" → לחיצה → "חסד = נתינה ואהבה ללא תנאי".</div></div>
+<div class="action-row"><span class="prio prio-2">חשוב</span><div class="action-text"><strong>Onboarding קצר.</strong> 3 מסכי swipe לביקור ראשון. "מה, למי, איך." אחר כך — ישר לתוכן.</div></div>
+<div class="action-row"><span class="prio prio-3">שיפור</span><div class="action-text"><strong>Streak ללא ענישה.</strong> פספוס = עיגול אפור, לא אפס. "המסע שלך, הקצב שלך."</div></div>
+<div class="action-row"><span class="prio prio-3">שיפור</span><div class="action-text"><strong>קריאה "קצר / עמוק".</strong> שתי מצבי קריאה: 2 דקות vs 12 דקות. לפי מצב הרוח.</div></div>
+
+<div class="rule-line"></div>
+<p style="text-align:center;color:var(--mid);font-size:13px;font-weight:300">מסמך זה מוביל את קובץ <strong>index.html</strong> — הדמו המחודש שמממש כל החלטה.</p>
+
+</div>
+</body>
+</html>

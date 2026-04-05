@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>אתגר 49</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;700;900&display=swap" rel="stylesheet">
+<style>
+
+/* ══════════════════════════════════════════
+   SYSTEM — Tokens
+   Narrative: Passover green → Shavuot gold
+   Base unit: 8px
+══════════════════════════════════════════ */
+:root {
+  --brand: #3535D4;
+  --ink:   #181820;
+  --mid:   #72728A;
+  --soft:  #B0B0C4;
+  --rule:  rgba(24,24,32,.07);
+  --paper: #F1EDE6;
+
+  /* week 1 → 7  (green → gold) */
+  --w1a:#2E9B55; --w1b:#E8F5EE; --w1k:#185C30; --w1l:#D0ECDA;
+  --w2a:#3E9E38; --w2b:#E9F5E8; --w2k:#1C5818; --w2l:#CEECC8;
+  --w3a:#5EA020; --w3b:#EDF5DF; --w3k:#2E5408; --w3l:#D6ECC0;
+  --w4a:#7E9E10; --w4b:#F0F4D6; --w4k:#3E4E00; --w4l:#DCE8B0;
+  --w5a:#A09A10; --w5b:#F4F2D0; --w5k:#504800; --w5l:#E2DCA0;
+  --w6a:#C09418; --w6b:#F6F0CA; --w6k:#604800; --w6l:#E8D890;
+  --w7a:#CCA230; --w7b:#F8F2C8; --w7k:#685000; --w7l:#EEE090;
+
+  --wa:#2E9B55; --wb:#E8F5EE; --wk:#185C30; --wl:#D0ECDA;
+
+  --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px;
+  --r:14px; --rL:22px; --rXL:32px; --rF:999px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --tS: .22s var(--ease);
+  --tM: .55s var(--ease);
+  --tL: .9s var(--ease);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Heebo', 'Arial Hebrew', sans-serif;
+  background-color: var(--wb);
+  color: var(--ink);
+  min-height: 100vh;
+  transition: background-color var(--tL);
+  background-image:
+    radial-gradient(ellipse 120% 50% at 8% 4%,  rgba(255,255,255,.5)  0%, transparent 55%),
+    radial-gradient(ellipse 50%  110% at 94% 96%,rgba(255,255,255,.22) 0%, transparent 55%);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════════════════════════════════════
+   HEADER — contains time, no separate sun bar
+══════════════════════════════════════════ */
+.hdr {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(241,237,230,.88);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--rule);
+  transition: background var(--tL);
+  padding: 0 var(--s3);
+}
+.hdr-in {
+  max-width: 440px; margin: 0 auto; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--brand); color: #fff;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-weight: 900; font-size: 10.5px; line-height: 1.1;
+  letter-spacing: -.5px; flex-shrink: 0; cursor: pointer;
+}
+.logo small { font-size: 7px; opacity: .6; font-weight: 300; }
+
+.hdr-c { text-align: center; }
+.hdr-day {
+  font-size: 13px; color: var(--ink); font-weight: 700;
+  letter-spacing: -.2px; line-height: 1.1;
+}
+.hdr-time {
+  font-size: 10px; color: var(--mid); font-weight: 300;
+  letter-spacing: .3px; font-variant-numeric: tabular-nums;
+  margin-top: 1px;
+}
+/* Pulse when under 1h */
+.hdr-time.urgent { color: var(--wa); font-weight: 600; animation: hdr-pulse 1.4s ease-in-out infinite; }
+@keyframes hdr-pulse { 0%,100%{opacity:1} 50%{opacity:.55} }
+
+.icon-btn {
+  width: 32px; height: 32px; border-radius: var(--r);
+  background: var(--wl); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--tS);
+  -webkit-tap-highlight-color: transparent;
+}
+.icon-btn:hover, .icon-btn:active { background: var(--wa); }
+.icon-btn:hover .s, .icon-btn:active .s { stroke: #fff; }
+.s { stroke: var(--wk); transition: stroke var(--tS); }
+
+/* ══════════════════════════════════════════
+   PROGRESS LINE — 2px ambient sunset bar
+   Replaces the full .sun section
+══════════════════════════════════════════ */
+.hdr-progress {
+  position: sticky; top: 56px; z-index: 199;
+  height: 2px; background: rgba(24,24,32,.06);
+  overflow: hidden;
+}
+.hdr-progress-fill {
+  height: 100%;
+  background: var(--wa);
+  width: 0%;
+  transition: width 1s linear, background var(--tL);
+}
+
+/* ══════════════════════════════════════════
+   MAIN
+══════════════════════════════════════════ */
+.main { max-width: 440px; margin: 0 auto; padding: var(--s3) var(--s3) 148px; }
+
+/* ══════════════════════════════════════════
+   HERO — condensed. Pill + title only.
+   Subtitle moved into challenge card.
+══════════════════════════════════════════ */
+.hero { padding: var(--s3) 0 var(--s2); }
+.ctx-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--wl); color: var(--wk);
+  border-radius: var(--rF); padding: 5px 14px;
+  font-size: 11px; font-weight: 600; margin-bottom: var(--s2);
+  transition: background var(--tL), color var(--tL);
+}
+/* No animated dot — removed */
+
+.hero-title {
+  font-size: clamp(40px,11vw,56px);
+  font-weight: 900; line-height: 1.04; letter-spacing: -2px;
+  color: var(--ink);
+}
+.hero-title .ac { color: var(--wa); transition: color var(--tL); }
+
+/* ══════════════════════════════════════════
+   CHALLENGE CARD — now includes context text
+══════════════════════════════════════════ */
+.challenge {
+  background: var(--wl); border-radius: var(--rXL);
+  padding: var(--s3); margin: var(--s2) 0;
+  position: relative; overflow: hidden; transition: background var(--tL);
+}
+.challenge::before {
+  content: '✦'; position: absolute; top: -22px; left: 6px;
+  font-size: 110px; color: var(--wa); opacity: .065;
+  pointer-events: none; transition: color var(--tL);
+}
+.ch-eye {
+  font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--wa);
+  opacity: .8; margin-bottom: 10px; transition: color var(--tL);
+}
+.ch-body {
+  font-size: 18px; font-weight: 600; line-height: 1.55;
+  position: relative; z-index: 1; margin-bottom: var(--s2);
+}
+/* Context line — moved from hero-sub */
+.ch-ctx {
+  font-size: 13px; font-weight: 300; color: var(--mid);
+  line-height: 1.7; border-top: 1px solid rgba(24,24,32,.08);
+  padding-top: 12px; position: relative; z-index: 1;
+}
+
+/* ══════════════════════════════════════════
+   DONE ZONE — NOW #3 IN FLOW (was #10)
+══════════════════════════════════════════ */
+.done-zone { margin: var(--s3) 0 var(--s2); }
+.streak-line {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 12px; color: var(--mid); font-weight: 300; margin-bottom: var(--s2);
+}
+.done-btn {
+  width: 100%; padding: 17px var(--s3);
+  background: var(--wa); color: #fff; border: none; border-radius: var(--rF);
+  font-family: 'Heebo', sans-serif; font-size: 16px; font-weight: 700;
+  cursor: pointer; transition: background var(--tL), filter var(--tS), transform var(--tS), box-shadow var(--tS);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  -webkit-tap-highlight-color: transparent; min-height: 56px;
+  position: relative; overflow: hidden;
+}
+.done-btn:hover:not(.done) { filter: brightness(1.07); box-shadow: 0 8px 28px rgba(0,0,0,.16); transform: translateY(-2px); }
+.done-btn:active:not(.done) { transform: scale(.98); }
+.done-btn.done { background: #4CAF78; cursor: default; transform: none; box-shadow: none; filter: none; }
+
+/* Tomorrow peek */
+.tomorrow-peek {
+  background: rgba(255,255,255,.55); backdrop-filter: blur(8px);
+  border: 1px solid var(--rule); border-radius: var(--rL);
+  padding: 16px; margin-top: 12px;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .5s var(--ease), transform .5s var(--ease);
+  pointer-events: none;
+}
+.tomorrow-peek.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.tmr-eye { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--soft); margin-bottom: 6px; }
+.tmr-name { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.tmr-sub  { font-size: 13px; font-weight: 300; color: var(--mid); }
+
+/* Email CTA */
+.email-row {
+  display: flex; gap: 8px; margin-top: 10px;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .5s .15s var(--ease), transform .5s .15s var(--ease);
+  pointer-events: none;
+}
+.email-row.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.email-input {
+  flex: 1; padding: 12px 14px; font-family: 'Heebo', sans-serif; font-size: 14px;
+  background: rgba(255,255,255,.7); border: 1px solid var(--rule); border-radius: var(--r);
+  outline: none; transition: border-color var(--tS); color: var(--ink);
+}
+.email-input:focus { border-color: var(--wa); }
+.email-input::placeholder { color: var(--soft); }
+.email-btn {
+  padding: 0 16px; background: var(--wa); color: #fff; border: none; border-radius: var(--r);
+  font-family: 'Heebo', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: filter var(--tS); white-space: nowrap;
+}
+.email-btn:hover { filter: brightness(1.07); }
+
+/* ══════════════════════════════════════════
+   DEEPEN DIVIDER
+══════════════════════════════════════════ */
+.deepen-div {
+  display: flex; align-items: center; gap: 12px;
+  margin: var(--s4) 0 var(--s3); color: var(--soft);
+}
+.deepen-div::before, .deepen-div::after {
+  content: ''; flex: 1; height: 1px; background: var(--rule);
+}
+.deepen-div span { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; white-space: nowrap; }
+
+/* ══════════════════════════════════════════
+   VIDEO — with title overlay
+══════════════════════════════════════════ */
+.vid {
+  border-radius: var(--rL); aspect-ratio: 16/9; overflow: hidden;
+  position: relative; cursor: pointer; margin: var(--s2) 0;
+  transition: transform var(--tS); -webkit-tap-highlight-color: transparent;
+}
+.vid:hover { transform: translateY(-2px); }
+.vid:active { transform: scale(.99); }
+.vid-bg { position: absolute; inset: 0; background: linear-gradient(145deg, var(--wl) 0%, var(--wa) 100%); opacity: .5; transition: opacity var(--tS), background var(--tL); }
+.vid:hover .vid-bg { opacity: .68; }
+.play-ring {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(255,255,255,.84); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform var(--tS); z-index: 1;
+}
+.vid:hover .play-ring { transform: translate(-50%,-50%) scale(1.07); }
+.play-ring svg { margin-right: -3px; }
+/* Video info overlay */
+.vid-info {
+  position: absolute; bottom: 0; right: 0; left: 0;
+  padding: 28px 14px 12px;
+  background: linear-gradient(0deg, rgba(24,24,32,.52) 0%, transparent 100%);
+  z-index: 1; display: flex; align-items: flex-end; justify-content: space-between;
+}
+.vid-title {
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,.92);
+  text-shadow: 0 1px 4px rgba(0,0,0,.3); line-height: 1.35;
+}
+.vid-dur {
+  font-size: 11px; color: rgba(255,255,255,.8); font-weight: 500;
+  background: rgba(0,0,0,.22); padding: 2px 8px; border-radius: var(--rF);
+  white-space: nowrap; flex-shrink: 0; margin-right: 8px;
+}
+
+/* ══════════════════════════════════════════
+   SECTIONS — accordions
+══════════════════════════════════════════ */
+.secs { display: flex; flex-direction: column; gap: 8px; margin: var(--s2) 0; }
+.sec {
+  background: rgba(255,255,255,.62); backdrop-filter: blur(8px);
+  border: 1px solid var(--rule); border-radius: var(--rL); overflow: hidden;
+}
+.sec-hdr {
+  padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none; transition: background var(--tS);
+  -webkit-tap-highlight-color: transparent; min-height: 52px;
+}
+.sec-hdr:hover { background: rgba(255,255,255,.4); }
+.sec-l { display: flex; align-items: center; gap: 11px; }
+.sec-ico {
+  width: 30px; height: 30px; border-radius: 9px;
+  background: var(--wl); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background var(--tL);
+}
+.sec-t { font-size: 15px; font-weight: 700; }
+.sec-m { font-size: 11px; color: var(--mid); margin-top: 1px; }
+.chev  { flex-shrink: 0; transition: transform .3s var(--ease); }
+.sec.open .chev { transform: rotate(180deg); }
+.sec-body { max-height: 0; overflow: hidden; transition: max-height .45s var(--ease); }
+.sec.open .sec-body { max-height: 900px; }
+.sec-in { padding: 2px 16px 18px; }
+.sec-in p { font-size: 15px; line-height: 1.82; color: var(--ink); margin-bottom: 12px; font-weight: 300; }
+.sec-in p:last-child { margin-bottom: 0; }
+
+.q-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.q-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--wl); border-radius: var(--r); padding: 12px 13px; transition: background var(--tL);
+}
+.q-n {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--wa); color: #fff; font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px; transition: background var(--tL);
+}
+.q-item span { font-size: 14px; line-height: 1.55; font-weight: 300; }
+
+/* ══════════════════════════════════════════
+   SONG — eyebrow fixed ("שיר היום" not "לשמוע")
+══════════════════════════════════════════ */
+.song {
+  background: rgba(255,255,255,.62); backdrop-filter: blur(8px);
+  border: 1px solid var(--rule); border-radius: var(--rL);
+  padding: 13px 16px; display: flex; align-items: center; gap: 12px;
+  cursor: pointer; transition: transform var(--tS), box-shadow var(--tS);
+  -webkit-tap-highlight-color: transparent; margin: var(--s2) 0;
+}
+.song:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(24,24,32,.09); }
+.song:active { transform: scale(.99); }
+.song-art {
+  width: 44px; height: 44px; border-radius: var(--r);
+  background: linear-gradient(135deg, var(--wl), var(--wa));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background var(--tL);
+}
+.song-info { flex: 1; min-width: 0; }
+.song-ey { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--mid); margin-bottom: 2px; }
+.song-nm { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-by { font-size: 12px; color: var(--mid); margin-top: 1px; }
+.song-pl {
+  width: 33px; height: 33px; border-radius: 50%;
+  background: var(--wa); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background var(--tL), transform var(--tS);
+}
+.song:hover .song-pl { transform: scale(1.06); }
+
+/* ══════════════════════════════════════════
+   NAV — both secondary, equal weight
+   "מחר" locked until done
+══════════════════════════════════════════ */
+.nav { display: flex; gap: 8px; margin-top: var(--s2); }
+.nav-btn {
+  flex: 1; padding: 13px; min-height: 48px;
+  background: rgba(255,255,255,.62); border: 1px solid var(--rule); border-radius: var(--r);
+  font-family: 'Heebo', sans-serif; font-size: 13px; font-weight: 600; color: var(--ink);
+  cursor: pointer; transition: border-color var(--tS), color var(--tS), background var(--tS);
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-btn:hover { border-color: var(--wa); color: var(--wk); background: var(--wl); }
+.nav-btn.locked {
+  opacity: .38; cursor: not-allowed;
+  background: rgba(255,255,255,.35);
+}
+.nav-btn.locked:hover { border-color: var(--rule); color: var(--ink); background: rgba(255,255,255,.35); }
+
+/* ══════════════════════════════════════════
+   WEEK SWITCHER — fixed bottom nav
+══════════════════════════════════════════ */
+.wsw {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
+  background: rgba(241,237,230,.92); backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid var(--rule);
+  padding: 8px 16px max(12px, env(safe-area-inset-bottom));
+}
+.wsw-in {
+  max-width: 440px; margin: 0 auto;
+  display: flex; align-items: flex-end;
+}
+.wsw-lbl {
+  font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--soft); padding-bottom: 5px; padding-left: 10px; flex-shrink: 0; white-space: nowrap;
+}
+.wsw-items { display: flex; flex: 1; }
+.wsw-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: 4px 2px 2px; cursor: pointer; border-radius: 9px;
+  transition: background var(--tS); position: relative;
+  -webkit-tap-highlight-color: transparent; min-height: 44px; justify-content: center;
+}
+.wsw-item:hover { background: rgba(24,24,32,.05); }
+.wsw-item::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  height: 2px; border-radius: 1px; width: 0;
+  transition: width .32s var(--ease);
+}
+.wsw-item.active::before { width: 16px; }
+.wsw-item[data-i="0"]::before { background: var(--w1a); }
+.wsw-item[data-i="1"]::before { background: var(--w2a); }
+.wsw-item[data-i="2"]::before { background: var(--w3a); }
+.wsw-item[data-i="3"]::before { background: var(--w4a); }
+.wsw-item[data-i="4"]::before { background: var(--w5a); }
+.wsw-item[data-i="5"]::before { background: var(--w6a); }
+.wsw-item[data-i="6"]::before { background: var(--w7a); }
+.wsw-num  { font-size: 13px; font-weight: 900; line-height: 1; color: var(--soft); transition: color var(--tS); }
+.wsw-name { font-size: 8px; font-weight: 500; color: var(--soft); margin-top: 2px; transition: color var(--tS); white-space: nowrap; }
+.wsw-item[data-i="0"].active .wsw-num { color: var(--w1a); }
+.wsw-item[data-i="1"].active .wsw-num { color: var(--w2a); }
+.wsw-item[data-i="2"].active .wsw-num { color: var(--w3a); }
+.wsw-item[data-i="3"].active .wsw-num { color: var(--w4a); }
+.wsw-item[data-i="4"].active .wsw-num { color: var(--w5a); }
+.wsw-item[data-i="5"].active .wsw-num { color: var(--w6a); }
+.wsw-item[data-i="6"].active .wsw-num { color: var(--w7a); }
+.wsw-item.active .wsw-name { color: var(--mid); }
+.wsw-item:hover .wsw-num  { color: var(--ink); }
+.wsw-item:hover .wsw-name { color: var(--mid); }
+
+/* ══════════════════════════════════════════
+   MAP MODAL
+══════════════════════════════════════════ */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(24,24,32,.4); backdrop-filter: blur(10px);
+  z-index: 400; align-items: flex-end; justify-content: center;
+}
+.overlay.open { display: flex; }
+.sheet {
+  background: var(--paper); border-radius: var(--rXL) var(--rXL) 0 0;
+  padding: 16px 20px max(48px,env(safe-area-inset-bottom));
+  width: 100%; max-width: 440px; max-height: 78vh; overflow-y: auto;
+  animation: slideUp .32s var(--ease);
+}
+@keyframes slideUp { from{transform:translateY(48px);opacity:0} to{transform:translateY(0);opacity:1} }
+.sh-top {
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px; position: relative;
+}
+.sh-handle { width: 28px; height: 3px; background: var(--rule); border-radius: 2px; }
+.sh-close {
+  position: absolute; left: 0;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(24,24,32,.06); border: none;
+  font-size: 13px; color: var(--mid); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--tS);
+  -webkit-tap-highlight-color: transparent;
+}
+.sh-close:hover { background: rgba(24,24,32,.12); }
+.sh-title { font-size: 20px; font-weight: 900; margin-bottom: 3px; letter-spacing: -.5px; }
+.sh-sub   { font-size: 12px; color: var(--mid); font-weight: 300; margin-bottom: 22px; }
+.map-wk   { margin-bottom: 16px; }
+.map-lbl  {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--mid); display: flex; align-items: center; gap: 6px; margin-bottom: 7px;
+}
+.map-pip  { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.map-row  { display: flex; gap: 4px; }
+.map-day  {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; cursor: pointer; transition: transform var(--tS);
+}
+.map-day.done, .map-day.today { color: #fff; }
+.map-day.fut { background: rgba(24,24,32,.06); color: var(--soft); cursor: default; }
+.map-day:not(.fut):hover { transform: scale(1.12); }
+
+/* ══════════════════════════════════════════
+   CONFETTI
+══════════════════════════════════════════ */
+#cf { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+.cp { position: absolute; top: -24px; animation: fall linear forwards; }
+@keyframes fall { to { transform: translateY(108vh) rotate(540deg); opacity: 0; } }
+
+</style>
+</head>
+<body>
+<div id="cf"></div>
+
+<!-- ═══ HEADER — includes day + sunset time ═══ -->
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="logo" onclick="alert('דף הבית')">49<small>ט:</small></div>
+    <div class="hdr-c">
+      <div class="hdr-day" id="j-hdr-day">טוען…</div>
+      <div class="hdr-time" id="j-hdr-time">— · עד שקיעה</div>
+    </div>
+    <button class="icon-btn" onclick="openMap()">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <path class="s" d="M1 3l4.5-1.5 4 1.5L14 1v11l-4.5 2-4-1.5L1 14V3z" stroke-width="1.25" stroke-linejoin="round"/>
+        <path class="s" d="M5.5 1.5V14M9.5 3V14" stroke-width="1.15" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- ═══ 2px PROGRESS LINE (ambient — replaces .sun section) ═══ -->
+<div class="hdr-progress">
+  <div class="hdr-progress-fill" id="j-bar"></div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+
+  <!-- 1. HERO — condensed (pill + title only) -->
+  <div class="hero">
+    <div class="ctx-pill">
+      <span id="j-pill">שבוע חסד · יום א׳</span>
+    </div>
+    <h1 class="hero-title">
+      <span class="ac" id="j-ac">לשמוע</span><br><span id="j-hero-sub">מבלי לפתור</span>
+    </h1>
+  </div>
+
+  <!-- 2. CHALLENGE CARD — with context text inside -->
+  <div class="challenge">
+    <div class="ch-eye">האתגר</div>
+    <div class="ch-body" id="j-ch-body">
+      בחר שיחה אחת היום שבה אתה רק מקשיב. לא מחכה לתורך. לא מכין תגובה. רק שם.
+    </div>
+    <div class="ch-ctx" id="j-ch-ctx">
+      להיות נוכח לגמרי עם מי שמולך — ללא עצה, ללא תיקון, ללא "אני יודע"
+    </div>
+  </div>
+
+  <!-- 3. DONE ZONE — primary action, immediately after challenge -->
+  <div class="done-zone">
+    <div class="streak-line">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+        <path d="M5.5 1C4 2.7 2.2 3.7 2.2 5.8a3.3 3.3 0 006.6 0c0-.9-.38-1.9-1-2.4-.2 1-.7 1.4-1.3 1.4C6 4.8 5.4 4 5.5 1z" stroke="var(--wa)" stroke-width="1.1" stroke-linejoin="round"/>
+      </svg>
+      <span id="j-streak">טוען…</span>
+    </div>
+
+    <button class="done-btn" id="j-done" onclick="markDone()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,.4)" stroke-width="1.2" fill="none"/>
+        <path id="j-done-ico" d="M5 8l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span id="j-done-txt">הייתי כאן</span>
+    </button>
+
+    <!-- Tomorrow peek — appears after done -->
+    <div class="tomorrow-peek" id="j-tmr">
+      <div class="tmr-eye" id="j-tmr-eye">מחר · יום ד׳</div>
+      <div class="tmr-name" id="j-tmr-name">גבורה שבחסד</div>
+      <div class="tmr-sub" id="j-tmr-sub">האתגר של מחר מתגלה בשקיעה</div>
+    </div>
+
+    <!-- Email reminder — appears after done -->
+    <div class="email-row" id="j-email">
+      <input class="email-input" type="email" placeholder="אימייל לתזכורת מחר" id="j-email-input"/>
+      <button class="email-btn" onclick="saveEmail()">שלח</button>
+    </div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="deepen-div">
+    <span>רוצה להעמיק?</span>
+  </div>
+
+  <!-- 4. VIDEO — with title overlay -->
+  <div class="vid" onclick="alert('וידאו ינוגן')">
+    <div class="vid-bg"></div>
+    <div class="play-ring">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+        <path d="M3.5 2l8 4.5-8 4.5V2z" fill="var(--wk)"/>
+      </svg>
+    </div>
+    <div class="vid-info">
+      <div class="vid-title" id="j-vid-title">חסד שבחסד — ההקשבה שמשנה</div>
+      <div class="vid-dur">4:32</div>
+    </div>
+  </div>
+
+  <!-- 5. CONTENT SECTIONS -->
+  <div class="secs">
+
+    <div class="sec" id="s1">
+      <div class="sec-hdr" onclick="tog('s1')">
+        <div class="sec-l">
+          <div class="sec-ico">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <path class="s" d="M2.5 1h7a2 2 0 012 2v9a2 2 0 01-2 2h-7V1z" stroke-width="1.2" stroke-linejoin="round"/>
+              <path class="s" d="M11.5 12a2 2 0 000-4h-9" stroke-width="1.2" stroke-linecap="round"/>
+              <path class="s" d="M5 5h4M5 7.5h3" stroke-width="1.1" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="sec-t">להעמיק</div>
+            <div class="sec-m">קריאה · 3 דקות</div>
+          </div>
+        </div>
+        <svg class="chev" width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <path d="M2.5 4.5l4 4 4-4" stroke="var(--soft)" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="sec-body"><div class="sec-in" id="j-reading-body">
+        <p>חסד שבחסד הוא הטוהר המוחלט של הנתינה. לתת ללא תנאי, ללא ציפייה, ללא חשבון. זהו היום הראשון של הספירה — יום שאחרי פסח, כשהחירות עדיין טרייה.</p>
+        <p>כשאנחנו מקשיבים מתוך חסד שבחסד — אנחנו נוכחים לגמרי עם האחר. לא מחכים לתורנו לדבר. לא מנסים לפתור. רק מחזיקים את המרחב שבו האחר יכול להיות מי שהוא.</p>
+        <p>בפסיכולוגיה קוראים לזה הקשבה אקטיבית. בעבודת המידות — זה חסד שבחסד.</p>
+      </div></div>
+    </div>
+
+    <div class="sec" id="s2">
+      <div class="sec-hdr" onclick="tog('s2')">
+        <div class="sec-l">
+          <div class="sec-ico">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <path class="s" d="M7.5 1C4.5 1 2 3.2 2 6c0 1.7.9 3.1 2.2 4L4 12l2.2-1c.4.07.8.1 1.3.1C10.5 11.1 13 8.9 13 6.5S10.5 1 7.5 1z" stroke-width="1.2" stroke-linejoin="round"/>
+              <path class="s" d="M5 6h5M5 8h3" stroke-width="1.1" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="sec-t">לשאול את עצמי</div>
+            <div class="sec-m">3 שאלות</div>
+          </div>
+        </div>
+        <svg class="chev" width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <path d="M2.5 4.5l4 4 4-4" stroke="var(--soft)" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="sec-body"><div class="sec-in">
+        <ul class="q-list" id="j-q-list">
+          <li class="q-item"><span class="q-n">1</span><span>מתי לאחרונה מישהו הקשיב לך באמת? מה הפך אותו לשונה?</span></li>
+          <li class="q-item"><span class="q-n">2</span><span>מה קורה בגוף שלך כשאתה ממתין לסיים לדבר — במקום להקשיב?</span></li>
+          <li class="q-item"><span class="q-n">3</span><span>יש מישהו בחייך שאתה מקשיב לו פחות? מה הסיבה?</span></li>
+        </ul>
+      </div></div>
+    </div>
+
+  </div>
+
+  <!-- 6. SONG — "שיר היום" not "לשמוע" -->
+  <div class="song" onclick="alert('פותח שיר')">
+    <div class="song-art">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
+        <path d="M6.5 13.5V4L15 2v9.5" stroke="white" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="4.5" cy="13.5" r="2" stroke="white" stroke-width="1.25"/>
+        <circle cx="13" cy="11.5" r="2" stroke="white" stroke-width="1.25"/>
+      </svg>
+    </div>
+    <div class="song-info">
+      <div class="song-ey">שיר היום</div>
+      <div class="song-nm" id="j-song-nm">שמע ישראל</div>
+      <div class="song-by" id="j-song-by">מיכה שטרית</div>
+    </div>
+    <div class="song-pl">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+        <path d="M2 1.5l7 3.5-7 3.5V1.5z" fill="white"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 7. NAV — both secondary, "מחר" locked until done -->
+  <div class="nav">
+    <button class="nav-btn" onclick="alert('יום קודם')">
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M7.5 2L3.5 5.5l4 3.5" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      אתמול
+    </button>
+    <button class="nav-btn locked" id="j-nav-tmr" onclick="navTomorrow()">
+      מחר
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M3.5 2l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+</main>
+
+<!-- ═══ WEEK SWITCHER ═══ -->
+<nav class="wsw">
+  <div class="wsw-in">
+    <span class="wsw-lbl">שבועות</span>
+    <div class="wsw-items" id="j-sw"></div>
+  </div>
+</nav>
+
+<!-- ═══ MAP MODAL — with close button ═══ -->
+<div class="overlay" id="j-ov" onclick="maybeClose(event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sh-top">
+      <div class="sh-handle"></div>
+      <button class="sh-close" onclick="closeMap()">✕</button>
+    </div>
+    <div class="sh-title">המסע שלך</div>
+    <div class="sh-sub" id="j-sh-sub">טוען…</div>
+    <div id="j-grid"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   DATA
+   ═══════════════════════════════════════════════════ */
+const W = [
+  {n:'חסד',   a:'#2E9B55',b:'#E8F5EE',k:'#185C30',l:'#D0ECDA'},
+  {n:'גבורה', a:'#3E9E38',b:'#E9F5E8',k:'#1C5818',l:'#CEECC8'},
+  {n:'תפארת', a:'#5EA020',b:'#EDF5DF',k:'#2E5408',l:'#D6ECC0'},
+  {n:'נצח',   a:'#7E9E10',b:'#F0F4D6',k:'#3E4E00',l:'#DCE8B0'},
+  {n:'הוד',   a:'#A09A10',b:'#F4F2D0',k:'#504800',l:'#E2DCA0'},
+  {n:'יסוד',  a:'#C09418',b:'#F6F0CA',k:'#604800',l:'#E8D890'},
+  {n:'מלכות', a:'#CCA230',b:'#F8F2C8',k:'#685000',l:'#EEE090'},
+];
+
+const SEFIROT = ['חסד','גבורה','תפארת','נצח','הוד','יסוד','מלכות'];
+
+function daySefirah(dayNum) {
+  const wi = Math.floor((dayNum-1)/7);
+  const di = (dayNum-1) % 7;
+  return `${SEFIROT[di]} שב${SEFIROT[wi]}`;
+}
+
+const HEB = ['','א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ז׳','ח׳','ט׳','י׳',
+  'י״א','י״ב','י״ג','י״ד','ט״ו','ט״ז','י״ז','י״ח','י״ט','כ׳',
+  'כ״א','כ״ב','כ״ג','כ״ד','כ״ה','כ״ו','כ״ז','כ״ח','כ״ט','ל׳',
+  'ל״א','ל״ב','ל״ג','ל״ד','ל״ה','ל״ו','ל״ז','ל״ח','ל״ט','מ׳',
+  'מ״א','מ״ב','מ״ג','מ״ד','מ״ה','מ״ו','מ״ז','מ״ח','מ״ט'];
+
+/* ═══════════════════════════════════════════════════
+   DAYS CONTENT — keyed by day number (1–49)
+   Populated from the original etgar49.com content.
+   Days without an entry fall back to sefirah-based placeholders.
+   ═══════════════════════════════════════════════════ */
+const DAYS = {
+  2: {
+    accentWord:  'לעזור',
+    titleLine2:  'בצורה הנכונה',
+    challenge:   'עזור.י למישהו בהתאם לצרכיו.ה, ולא לפי מה שאת.ה חושב.ת שהוא צריך.ה — גם אם הדבר כרוך במאמץ.',
+    context:     'גבורה שבחסד היא הכוונת הנתינה בצורה מדודה — אהבה צריכה להיות בונה, לכלול גבולות, וכבוד לצרכי הזולת.',
+    reading:
+      `<p>״יום אחד, הבטתי בה וחשתי בושה וחרטה עמוקה על המעשה שעשיתי. כשחושבים על זה, מורי זן בני זמננו פועלים בצורה מאוד דומה כשהם מנחים את תלמידיהם.״</p><p style="font-size:11px;color:var(--mid);margin-top:6px">מכתב מורה הזן הקואין לתלמידו קוקאן — יובל אידו טל, מבוא קצר לבודהיזם, עמ׳ 151</p><p style="margin-top:14px">״האהבה היא הדרך היחידה לתפוס את הזולת בפנים פנימיותו. שום אדם לא ירד לעומק מהותו של אדם אחר, אלא אם כן הוא אוהב אותו. מעשה-האהבה הרוחני מניח לו לראות את הסגולות הגנוזות בו, שעדיין לא הגיעו לכדי הגשמה — ובאהבתו זו מאפשר האדם האוהב לאדם האהוב להגשים את עצמו.״</p><p style="font-size:11px;color:var(--mid);margin-top:6px">ויקטור פרנקל</p>`,
+    questions: [
+      'לאילו גבולות אני זקוק.ה בקשר? (משפחתי / זוגי / חברי)',
+      'האם אני ער.ה לרגשות השני.ה ולהתנהגותו.ה?',
+      'האם אני יכול.ה לתת לאחר גם כשאיני מסכימ.ה או מחבב.ת אותו.ה?',
+      'האם אני יודע.ת לקבל ולתת ביקורת?',
+      'האם יותר נוח לי לבקר את מי שאיני מכיר.ה?',
+      'איפה הרגשתי שגבולות הנתינה שלי נמתחים מעבר ליכולתי?',
+    ],
+    songTitle:  '(להשלים)',
+    songArtist: '(להשלים)',
+    videoTitle: 'גבורה שבחסד — לתת בצורה הנכונה',
+  },
+  1: {
+    accentWord:  'לתת',
+    titleLine2:  'ללא תנאי',
+    challenge:   'עשה.י מעשה אחד, קטן או גדול, למען מישהו יקר לך.',
+    context:     'החסד שבחסד הוא אהבה ללא תנאי — מאהבה זו נובעת נתינה אמיתית ועשיית חסד עם הזולת.',
+    reading:
+      `<p>״לֹא-תִקֹּם וְלֹא-תִטֹּר... וְאָהַבְתָּ לְרֵעֲךָ כָּמוֹךָ״ — באה מן הנתינה? הורגלנו לחשוב את הנתינה לתולדת האהבה, כי לאשר יאהב האדם, ייטב לו. אבל הסברה השנייה היא, כי יאהב אדם את פרי מעשיו, בהרגישו אשר חלק מן עצמיותו בהם היא — אם בן, אשר ילד או אומן; ואם צמח, אשר נטע; ואם גם מן הדומם, כמו בית אשר בנה — הנהו דבוק למעשי ידיו באהבה, כי את עצמו ימצא בהם.</p><p style="font-size:11px;color:var(--mid);margin-top:10px">פרק ד׳, מכתב מאליהו — אליהו אליעזר דסלר</p>`,
+    questions: [
+      'למי ולמה יש לי אהבה ללא תנאי?',
+      'כיצד אני מביע.ה אהבה?',
+      'לאיזה חסד אני מרגיש.ה שאני זקוק.ה?',
+      'איזה חסד אני מרגיש.ה שביכולתי לתת לעולם?',
+      'חשוב.י על אדם זר שנחשפת לסיפורו לאחר ה-7 באוקטובר, והרגשת חיבור מיוחד אליו. האם בנסיבות רגילות היית מוצא.ת חיבור עם אותו אדם?',
+      'במבט לאחור, איך המלחמה השפיעה ומשפיעה על היכולת שלי להעניק ולקבל אהבה?',
+    ],
+    songTitle:  'נוצץ בחשכה',
+    songArtist: 'אסתר שמיר ויהודה פוליקר',
+    videoTitle: 'חסד שבחסד — אהבה ונתינה',
+  },
+};
+
+/* ═══════════════════════════════════════════════════
+   OMER DAY CALCULATION — starts 2/4/2026
+   ═══════════════════════════════════════════════════ */
+const OMER_START = new Date('2026-04-02T00:00:00');
+(function() {
+  // Allow ?day=N override for demo/testing (e.g. ?day=1 to preview Day 1)
+  const urlDay = parseInt(new URLSearchParams(location.search).get('day'), 10);
+  if (urlDay >= 1 && urlDay <= 49) {
+    window.TODAY = urlDay;
+    return;
+  }
+  const now = new Date(); now.setHours(0,0,0,0);
+  const start = new Date(OMER_START); start.setHours(0,0,0,0);
+  window.TODAY = Math.max(1, Math.min(49, Math.floor((now - start)/86400000)+1));
+})();
+const weekIdx   = Math.floor((TODAY-1)/7);
+const dayInWeek = ((TODAY-1)%7)+1;
+const todayHeb  = HEB[TODAY];
+const tomorrowNum = Math.min(TODAY+1, 49);
+const tomorrowHeb = HEB[tomorrowNum];
+
+/* ═══════════════════════════════════════════════════
+   LOCAL STORAGE
+   Wix equivalent: import {local} from 'wix-storage-frontend'
+   ═══════════════════════════════════════════════════ */
+const DONE_KEY = `etgar49_done_${TODAY}`;
+
+function calcStreak() {
+  let s = 0;
+  for (let d = TODAY; d >= 1; d--) {
+    if (localStorage.getItem(`etgar49_done_${d}`) === '1') s++;
+    else break;
+  }
+  return s;
+}
+
+let done   = localStorage.getItem(DONE_KEY) === '1';
+let streak = calcStreak();
+
+/* ═══════════════════════════════════════════════════
+   INIT UI
+   ═══════════════════════════════════════════════════ */
+
+/* Header */
+document.getElementById('j-hdr-day').textContent = `יום ${todayHeb} · ${TODAY}/49`;
+
+/* Pill */
+document.getElementById('j-pill').textContent = `${W[weekIdx].n} · ${daySefirah(TODAY)}`;
+
+/* Hero accent word = sefirah of day-in-week */
+document.getElementById('j-ac').textContent = SEFIROT[dayInWeek-1];
+
+/* Video title (fallback — overridden below if DAYS[TODAY] has data) */
+document.getElementById('j-vid-title').textContent = `${daySefirah(TODAY)}`;
+
+/* Map subtitle */
+document.getElementById('j-sh-sub').textContent =
+  `יום ${TODAY} מתוך 49 · עוד ${49-TODAY} ימים לשבועות`;
+
+/* Tomorrow peek — uses correct sefirah for tomorrow */
+document.getElementById('j-tmr-eye').textContent  = `מחר · יום ${tomorrowHeb}`;
+document.getElementById('j-tmr-name').textContent = daySefirah(tomorrowNum);
+document.getElementById('j-tmr-sub').textContent  = 'האתגר המלא מתגלה עם השקיעה';
+
+/* Streak */
+updateStreakUI();
+
+/* Nav "מחר" — locked until today is done */
+updateNavState();
+
+/* If already done today — show state without animation */
+if (done) showDoneState(false);
+
+/* Apply week colors */
+applyWeekColors(weekIdx);
+
+/* ─── CONTENT FROM DAYS DATA ─── */
+(function() {
+  const d = DAYS[TODAY];
+  if (!d) return; // no real content for this day yet — placeholders remain
+
+  // Hero
+  document.getElementById('j-ac').textContent       = d.accentWord;
+  document.getElementById('j-hero-sub').textContent = d.titleLine2;
+
+  // Challenge card
+  document.getElementById('j-ch-body').textContent = d.challenge;
+  document.getElementById('j-ch-ctx').textContent  = d.context;
+
+  // Reading (HTML — supports styled paragraphs)
+  document.getElementById('j-reading-body').innerHTML = d.reading;
+
+  // Questions
+  const ql = document.getElementById('j-q-list');
+  ql.innerHTML = d.questions.map((q, i) =>
+    `<li class="q-item"><span class="q-n">${i+1}</span><span>${q}</span></li>`
+  ).join('');
+
+  // Update questions section count
+  const s2meta = document.querySelector('#s2 .sec-m');
+  if (s2meta) s2meta.textContent = `${d.questions.length} שאלות`;
+
+  // Song
+  document.getElementById('j-song-nm').textContent = d.songTitle;
+  document.getElementById('j-song-by').textContent = d.songArtist;
+
+  // Video title
+  document.getElementById('j-vid-title').textContent = d.videoTitle;
+})();
+
+/* ─── STREAK TEXT ─── */
+function updateStreakUI() {
+  const el = document.getElementById('j-streak');
+  if (streak === 0) {
+    el.textContent = 'יום חדש מתחיל — כל מסע מתחיל בצעד ראשון';
+  } else if (streak === 1) {
+    el.textContent = 'יום ראשון ברצף · המסע מתחיל';
+  } else {
+    el.textContent = `${streak} ימים ברצף`;
+  }
+}
+
+/* ─── NAV STATE ─── */
+function updateNavState() {
+  const tmrBtn = document.getElementById('j-nav-tmr');
+  if (done) {
+    tmrBtn.classList.remove('locked');
+  } else {
+    tmrBtn.classList.add('locked');
+    tmrBtn.title = 'סיים את אתגר היום כדי להמשיך';
+  }
+}
+
+function navTomorrow() {
+  if (!done) return; // locked
+  alert('יום הבא');
+}
+
+/* ═══════════════════════════════════════════════════
+   BUILD WEEK SWITCHER
+   ═══════════════════════════════════════════════════ */
+const sw = document.getElementById('j-sw');
+W.forEach((w, i) => {
+  const el = document.createElement('div');
+  el.className = 'wsw-item' + (i===weekIdx ? ' active' : '');
+  el.dataset.i = i;
+  el.innerHTML = `<div class="wsw-num">${i+1}</div><div class="wsw-name">${w.n}</div>`;
+  el.onclick = () => setWeek(i);
+  sw.appendChild(el);
+});
+
+/* ─── APPLY WEEK COLORS ─── */
+function applyWeekColors(i) {
+  const w = W[i], r = document.documentElement.style;
+  r.setProperty('--wa', w.a); r.setProperty('--wb', w.b);
+  r.setProperty('--wk', w.k); r.setProperty('--wl', w.l);
+}
+
+/* ─── SET WEEK (DEMO navigation) ─── */
+function setWeek(i) {
+  applyWeekColors(i);
+  const displayDay = i*7 + dayInWeek;
+  const clampedDay = Math.min(displayDay, 49);
+  document.getElementById('j-pill').textContent =
+    `${W[i].n} · ${daySefirah(clampedDay)}`;
+  document.getElementById('j-ac').textContent = SEFIROT[dayInWeek-1];
+  document.getElementById('j-vid-title').textContent =
+    (DAYS[clampedDay] && DAYS[clampedDay].videoTitle) || daySefirah(clampedDay);
+  document.getElementById('j-tmr-name').textContent = daySefirah(Math.min(clampedDay+1,49));
+  document.querySelectorAll('.wsw-item').forEach((el, idx) =>
+    el.classList.toggle('active', idx===i));
+}
+
+/* ═══════════════════════════════════════════════════
+   SUNSET TIMER — in header, 2px bar below
+   (Wix: use Hebcal API + user geolocation)
+   ═══════════════════════════════════════════════════ */
+let secs = 3*3600 + 22*60 + 17;
+const DAY_SECS = 12 * 3600;
+const hdrTime = document.getElementById('j-hdr-time');
+
+setInterval(() => {
+  if (secs > 0) secs--;
+  const h = Math.floor(secs/3600);
+  const m = String(Math.floor((secs%3600)/60)).padStart(2,'0');
+  const s = String(secs%60).padStart(2,'0');
+  const timeStr = h > 0 ? `${h}:${m}` : `${m}:${s}`;
+
+  document.getElementById('j-bar').style.width = (100 - secs/DAY_SECS*100) + '%';
+
+  if (secs === 0) {
+    hdrTime.textContent = 'שקיעה · יום חדש מתחיל';
+    hdrTime.classList.add('urgent');
+  } else if (secs < 1800) {
+    hdrTime.textContent = `${timeStr} · עד שקיעה`;
+    hdrTime.classList.add('urgent');
+  } else if (secs < 3600) {
+    hdrTime.textContent = `${timeStr} · עד שקיעה`;
+    hdrTime.classList.add('urgent');
+  } else {
+    hdrTime.textContent = `${timeStr} · עד שקיעה`;
+    hdrTime.classList.remove('urgent');
+  }
+}, 1000);
+
+/* Set initial time display */
+(function() {
+  const h = Math.floor(secs/3600);
+  const m = String(Math.floor((secs%3600)/60)).padStart(2,'0');
+  hdrTime.textContent = `${h}:${m} · עד שקיעה`;
+  document.getElementById('j-bar').style.width = (100 - secs/DAY_SECS*100) + '%';
+})();
+
+/* ═══════════════════════════════════════════════════
+   ACCORDION
+   ═══════════════════════════════════════════════════ */
+function tog(id) { document.getElementById(id).classList.toggle('open'); }
+
+/* ═══════════════════════════════════════════════════
+   DONE — "הייתי כאן"
+   Saves to localStorage (Wix: wix-storage-frontend)
+   ═══════════════════════════════════════════════════ */
+function markDone() {
+  if (done) return;
+  done = true;
+  localStorage.setItem(DONE_KEY, '1');
+  streak = calcStreak();
+  showDoneState(true);
+  updateNavState();
+}
+
+function showDoneState(animate) {
+  const btn = document.getElementById('j-done');
+  btn.classList.add('done');
+  document.getElementById('j-done-txt').textContent = `הייתי כאן · יום ${todayHeb}`;
+
+  if (animate) {
+    burst();
+    updateStreakUI();
+    setTimeout(() => {
+      document.getElementById('j-tmr').classList.add('show');
+      document.getElementById('j-email').classList.add('show');
+    }, 600);
+  } else {
+    document.getElementById('j-tmr').classList.add('show');
+    document.getElementById('j-email').innerHTML =
+      `<div style="font-size:13px;color:var(--mid);font-weight:300;padding:10px 14px;background:rgba(255,255,255,.6);border-radius:var(--r);width:100%;text-align:center">
+        ${streak > 1 ? `${streak} ימים ברצף — כל הכבוד` : 'סומן היום'}
+      </div>`;
+    document.getElementById('j-email').classList.add('show');
+    updateStreakUI();
+  }
+}
+
+/* ─── EMAIL ─── */
+function saveEmail() {
+  const v = document.getElementById('j-email-input').value.trim();
+  if (!v || !v.includes('@')) return;
+  /* Wix: wixCrm.createContact({emails:[{email:v}]}) */
+  document.getElementById('j-email').innerHTML =
+    `<div style="font-size:13px;color:var(--mid);font-weight:300;padding:10px 14px;background:rgba(255,255,255,.6);border-radius:var(--r);width:100%;text-align:center">
+      ✓ נשלח · נזכיר לך מחר יום ${tomorrowHeb}
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════
+   CONFETTI
+   ═══════════════════════════════════════════════════ */
+function burst() {
+  const wrap = document.getElementById('cf');
+  ['✦','·','✦','✦','·','✦','✦'].forEach(ch => {
+    for (let i=0; i<4; i++) {
+      const el = document.createElement('div'); el.className = 'cp';
+      el.textContent = ch;
+      el.style.left = Math.random()*100 + 'vw';
+      el.style.color = ['var(--wa)','var(--wk)','rgba(24,24,32,.4)'][Math.floor(Math.random()*3)];
+      el.style.fontSize = (11+Math.random()*14) + 'px';
+      el.style.animationDuration = (1.5+Math.random()*2) + 's';
+      el.style.animationDelay = Math.random()*0.4 + 's';
+      wrap.appendChild(el);
+      setTimeout(() => el.remove(), 4500);
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   MAP
+   ═══════════════════════════════════════════════════ */
+function openMap() {
+  const g = document.getElementById('j-grid'); g.innerHTML = '';
+  W.forEach((w, wi) => {
+    const block = document.createElement('div'); block.className = 'map-wk';
+    const lbl = document.createElement('div'); lbl.className = 'map-lbl';
+    lbl.innerHTML = `<span class="map-pip" style="background:${w.a}"></span>שבוע ${wi+1} — ${w.n}`;
+    const row = document.createElement('div'); row.className = 'map-row';
+    for (let d=1; d<=7; d++) {
+      const num = wi*7+d, el = document.createElement('div');
+      const isDoneDay = localStorage.getItem(`etgar49_done_${num}`) === '1';
+      const cls = num===TODAY ? 'today' : isDoneDay ? 'done' : num<TODAY ? 'done' : 'fut';
+      el.className = `map-day ${cls}`;
+      if (num<=TODAY || isDoneDay) { el.style.background = w.a; el.style.color = 'white'; }
+      if (num===TODAY) el.style.boxShadow = `0 0 0 3px white,0 0 0 5px ${w.a}`;
+      el.textContent = num;
+      row.appendChild(el);
+    }
+    block.appendChild(lbl); block.appendChild(row); g.appendChild(block);
+  });
+  document.getElementById('j-ov').classList.add('open');
+}
+function closeMap() { document.getElementById('j-ov').classList.remove('open'); }
+function maybeClose(e) {
+  if (e.target === document.getElementById('j-ov')) closeMap();
+}
+</script>
+</body>
+</html>

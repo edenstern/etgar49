@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אתגר 49 — Redesign מלא</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #181820;
+  --mid: #72728A;
+  --soft: #B0B0C4;
+  --paper: #F4F0EA;
+  --white: #FDFCFA;
+  --rule: rgba(24,24,32,.08);
+  --green: #2E9B55;
+  --gold: #CCA230;
+  --red: #C44040;
+  --blue: #3535D4;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Heebo', 'Arial Hebrew', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.7;
+}
+
+/* ── LAYOUT ── */
+.doc { max-width: 780px; margin: 0 auto; padding: 64px 32px 120px; }
+
+/* ── COVER ── */
+.cover {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 48px; margin-bottom: 64px;
+}
+.cover-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--soft); margin-bottom: 24px;
+}
+.cover-title {
+  font-size: clamp(42px, 7vw, 68px); font-weight: 900;
+  line-height: 1.02; letter-spacing: -2.5px; margin-bottom: 20px;
+}
+.cover-title .ac { color: var(--green); }
+.cover-sub { font-size: 15px; font-weight: 300; color: var(--mid); max-width: 500px; line-height: 1.8; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 72px; }
+.sec-num {
+  font-size: 10px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--soft); margin-bottom: 10px;
+}
+.sec-title {
+  font-size: 28px; font-weight: 900; letter-spacing: -1px;
+  line-height: 1.15; margin-bottom: 32px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--rule);
+}
+
+/* ── PROSE ── */
+p { font-size: 15px; font-weight: 300; line-height: 1.85; margin-bottom: 16px; color: var(--ink); }
+p strong { font-weight: 700; }
+p em { font-style: normal; color: var(--mid); }
+
+/* ── CALLOUT ── */
+.callout {
+  background: var(--white);
+  border-right: 3px solid var(--green);
+  border-radius: 0 12px 12px 0;
+  padding: 20px 22px;
+  margin: 28px 0;
+}
+.callout.gold { border-right-color: var(--gold); }
+.callout.red { border-right-color: var(--red); }
+.callout.blue { border-right-color: var(--blue); }
+.callout-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 8px;
+  color: var(--soft);
+}
+.callout p { margin-bottom: 0; font-size: 15px; }
+.callout .big { font-size: 20px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+
+/* ── TABLE ── */
+.tbl { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+.tbl th {
+  text-align: right; font-weight: 700; font-size: 10px;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--soft);
+  padding: 8px 12px; border-bottom: 2px solid var(--rule);
+}
+.tbl td { padding: 13px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.65; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl .bad { color: var(--red); font-size: 13px; }
+.tbl .good { color: var(--green); font-size: 13px; font-weight: 600; }
+.tbl .why { color: var(--mid); font-size: 12px; font-style: italic; }
+.tbl .tag {
+  display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
+  background: rgba(24,24,32,.06); color: var(--mid);
+}
+.tbl .tag.del { background: rgba(196,64,64,.1); color: var(--red); }
+.tbl .tag.keep { background: rgba(46,155,85,.1); color: var(--green); }
+.tbl .tag.rewrite { background: rgba(53,53,212,.1); color: var(--blue); }
+.tbl .tag.rebuild { background: rgba(204,162,48,.15); color: #8A6800; }
+
+/* ── WIREFRAME ── */
+.wireframe {
+  background: var(--white); border: 1px solid var(--rule);
+  border-radius: 18px; padding: 28px; margin: 24px 0;
+  font-size: 14px;
+}
+.wf-row {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 12px 0; border-bottom: 1px dashed var(--rule);
+}
+.wf-row:last-child { border-bottom: none; }
+.wf-num {
+  font-size: 11px; font-weight: 900; color: var(--soft);
+  width: 24px; flex-shrink: 0; padding-top: 2px;
+}
+.wf-label { flex: 1; }
+.wf-name { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+.wf-desc { font-size: 13px; color: var(--mid); line-height: 1.5; }
+.wf-tag {
+  font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+  margin-top: 2px;
+}
+.wf-tag.above { background: rgba(46,155,85,.12); color: var(--green); }
+.wf-tag.core { background: rgba(24,24,32,.1); color: var(--ink); }
+.wf-tag.optional { background: rgba(113,113,138,.1); color: var(--mid); }
+.wf-tag.hidden { background: rgba(204,162,48,.12); color: #8A6800; }
+
+/* ── COPY BLOCK ── */
+.copy-block {
+  background: var(--white); border-radius: 14px;
+  padding: 22px 24px; margin: 16px 0;
+}
+.copy-block .before {
+  font-size: 13px; color: var(--red); text-decoration: line-through;
+  margin-bottom: 10px; opacity: .7;
+}
+.copy-block .problem {
+  font-size: 12px; color: var(--mid); margin-bottom: 14px;
+  font-style: italic; padding-bottom: 14px; border-bottom: 1px solid var(--rule);
+}
+.copy-block .after { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.copy-block .reason { font-size: 12px; color: var(--mid); }
+.copy-block .alts { margin-top: 12px; }
+.copy-block .alt {
+  font-size: 13px; padding: 7px 12px; background: rgba(46,155,85,.06);
+  border-radius: 8px; margin-top: 6px; color: var(--ink);
+}
+.copy-block .alt::before { content: '— '; color: var(--green); font-weight: 700; }
+
+/* ── DECISION ── */
+.decision {
+  background: var(--white); border-radius: 14px;
+  padding: 20px 22px; margin: 14px 0;
+  border-right: 3px solid transparent;
+}
+.decision.yes { border-right-color: var(--green); }
+.decision.no { border-right-color: var(--soft); }
+.decision.discuss { border-right-color: var(--gold); }
+.dec-q { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.dec-body { font-size: 13px; color: var(--mid); line-height: 1.65; }
+.dec-verdict {
+  display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 5px;
+  margin-bottom: 10px;
+}
+.dec-verdict.yes { background: rgba(46,155,85,.12); color: var(--green); }
+.dec-verdict.no { background: rgba(113,113,138,.1); color: var(--mid); }
+.dec-verdict.discuss { background: rgba(204,162,48,.15); color: #8A6800; }
+
+/* ── LISTS ── */
+.list-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+.list-card {
+  background: var(--white); border-radius: 14px; padding: 20px;
+}
+.list-card h4 {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.list-card h4.del { color: var(--red); }
+.list-card h4.keep { color: var(--green); }
+.list-card h4.rewrite { color: var(--blue); }
+.list-card h4.rebuild { color: #8A6800; }
+.list-card ul { list-style: none; }
+.list-card li {
+  font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--rule);
+  color: var(--ink); line-height: 1.5;
+}
+.list-card li:last-child { border-bottom: none; }
+.list-card li::before { margin-left: 6px; }
+.list-card.del li::before { content: '✕'; color: var(--red); }
+.list-card.keep li::before { content: '✓'; color: var(--green); }
+.list-card.rewrite li::before { content: '↻'; color: var(--blue); }
+.list-card.rebuild li::before { content: '◆'; color: #8A6800; }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--rule); margin: 48px 0; }
+
+/* ── CORE LOOP BOX ── */
+.core-loop {
+  background: var(--ink); color: #fff;
+  border-radius: 18px; padding: 36px;
+  margin: 32px 0;
+}
+.core-loop .label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: .4; margin-bottom: 16px; }
+.core-loop .statement { font-size: clamp(18px, 3vw, 24px); font-weight: 300; line-height: 1.7; }
+.core-loop .statement strong { font-weight: 900; color: #a8d8b8; }
+</style>
+</head>
+<body>
+<div class="doc">
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-label">Product Redesign · אתגר 49 · 2026</div>
+  <h1 class="cover-title">מוצר,<br><span class="ac">ריטואל,</span><br>אדם.</h1>
+  <p class="cover-sub">ניתוח מלא ועיצוב מחדש של אתגר 49 — מהמשפט הראשון שהמשתמש רואה ועד לרגע שהוא סוגר את הדף. תהליך, לא רשימה.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     שלב 1 — ביקורת המוצר הנוכחי
+     ═══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-num">שלב 01</div>
+  <h2 class="sec-title">מה המוצר הנוכחי משדר — וההפרש מהכוונה</h2>
+
+  <p>לפני שכותבים שורה אחת, צריך להבין <strong>מה המשתמש מרגיש</strong> כשהוא נכנס לאתר. לא מה התוכן, אלא מה הטון, מה ההרגשה הראשונה, ומה המסר שנספג בלי לקרוא מילה.</p>
+
+  <div class="callout red">
+    <div class="callout-label">האבחנה</div>
+    <p class="big">המוצר מרגיש כמו אתר תוכן שמנסה להיות חוויה. הריטואל הוא הכוונה — אבל ה-UI מספר סיפור אחר.</p>
+  </div>
+
+  <p>פירוט לפי אזורים:</p>
+
+  <table class="tbl">
+    <tr>
+      <th>אזור</th>
+      <th>מה הוא משדר בפועל</th>
+      <th>מה הכוונה</th>
+      <th>הפרש</th>
+    </tr>
+    <tr>
+      <td><strong>דף הכניסה / about</strong></td>
+      <td class="bad">נאום. כבד. כרזה לאומית. דורש שקיעה לפני שנכנסים.</td>
+      <td>הזמנה חמה לריטואל אישי.</td>
+      <td>גדול מאוד — הטקסט הנוכחי דוחה, לא מזמין.</td>
+    </tr>
+    <tr>
+      <td><strong>מסך היום</strong></td>
+      <td class="bad">עמוד תוכן עם כותרת גדולה. "יש כאן הרבה לקרוא".</td>
+      <td>עצירה של דקה. אתגר אחד. פעולה אחת.</td>
+      <td>בינוני — הויז'ואל טוב אבל הסדר הפוך (תוכן לפני פעולה).</td>
+    </tr>
+    <tr>
+      <td><strong>"הייתי כאן" / Done</strong></td>
+      <td class="bad">כפתור סימון. אדמיניסטרטיבי. "עשיתי את זה".</td>
+      <td>רגע של נוכחות. "הייתי כאן, עסקתי בזה, יצאתי קצת שונה".</td>
+      <td>גדול — המעטפת הטקסטואלית סביב הכפתור לא מרימה אותו לרגע.</td>
+    </tr>
+    <tr>
+      <td><strong>video block</strong></td>
+      <td class="bad">placeholder. "אולי יש כאן וידאו".</td>
+      <td>ממד נוסף לאותה מידה — ויז'ואלי, רגשי.</td>
+      <td>גדול — ללא כותרת, ללא הקשר, לא ברור למה לצפות.</td>
+    </tr>
+    <tr>
+      <td><strong>week switcher</strong></td>
+      <td class="bad">ניווט טכני. "יש כאן 7 שבועות".</td>
+      <td>מפת מסע — איפה אני בתוך ה-49 ימים.</td>
+      <td>בינוני — הוויז'ואל עובד, הקופי לא.</td>
+    </tr>
+    <tr>
+      <td><strong>WhatsApp CTA</strong></td>
+      <td class="bad">מודעה. "הצטרפו אלינו". מתחרה על תשומת לב.</td>
+      <td>הפנייה לקהילה — אחרי שהמשתמש כבר בפנים.</td>
+      <td>גדול — המיקום שגוי, הטון שגוי.</td>
+    </tr>
+    <tr>
+      <td><strong>ה-about text</strong></td>
+      <td class="bad">נאום פוליטי-לאומי ב-4 פסקאות. דרמטי. מכביד.</td>
+      <td>הקשר לזמן, לפרקטיקה, לאנשים שמאחוריה.</td>
+      <td>גדול מאוד — הטקסט הנוכחי עובד ביותר מדי חזיתות.</td>
+    </tr>
+  </table>
+
+  <div class="callout">
+    <div class="callout-label">מה עובד</div>
+    <p>צבעי השבועות (ירוק→זהב) — נכון ויפה. המבנה הבסיסי של "יום + ספירה". הרעיון של "הייתי כאן". שמות הסעיפים ("להעמיק", "לשאול את עצמי"). ה-streak counter — רלוונטי ומניע.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     שלב 2 — ה-core loop
+     ═══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-num">שלב 02</div>
+  <h2 class="sec-title">ה-core loop — במשפט אחד</h2>
+
+  <p>לפני כל החלטת עיצוב, קופי, או קוד — צריך לדעת מה המוצר <em>עושה</em> ברמה האנושית. לא ברמת UI.</p>
+
+  <div class="core-loop">
+    <div class="label">Core Loop</div>
+    <div class="statement">
+      להגיע פעם ביום, <strong>לעצור</strong> לרגע אחד, לפגוש מידה אחת, <strong>לעשות תנועה קטנה פנימה</strong>, ולסגור את היום עם ידיעה שהייתי כאן — <strong>גם אם הכל מסביב עדיין סוער.</strong>
+    </div>
+  </div>
+
+  <p>כל החלטת עיצוב נמדדת ביחס למשפט הזה. כל אלמנט שלא תומך בו — שאלה אם הוא צריך להיות שם.</p>
+
+  <p><strong>מה המשמעות:</strong> המוצר הוא לא תוכן. הוא לא קורס. הוא לא app לפיתוח אישי. הוא מיכל לחזרה יומית — כמו תפילת שחרית, כמו כוס קפה, כמו ריצת בוקר. הוא <em>routine</em> עם עומק.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     שלב 3 — עריכת הקופי המלא
+     ═══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-num">שלב 03</div>
+  <h2 class="sec-title">עריכת הקופי — לפני ואחרי</h2>
+
+  <p>בכל מקרה: הבעיה, הניסוח החדש, למה הוא עדיף.</p>
+
+  <!-- ── כותרת ראשית ── -->
+  <h3 style="font-size:17px;font-weight:700;margin:32px 0 12px;">א. כותרת ראשית + כותרת משנה</h3>
+
+  <div class="copy-block">
+    <div class="before">ברוכים הבאים לאתגר 49</div>
+    <div class="problem">הבעיה: "ברוכים הבאים" הוא פורמלי ומרוחק. "לאתגר" ממצב את המוצר כתחרות מול עצמך. אין חום, אין הזמנה, אין "מה יש לי כאן".</div>
+    <div class="after">49 ימים מהיציאה אל עצמך.</div>
+    <div class="reason">למה: ישיר, מסקרן, מציב את הזמן (49), מציב כיוון (פנימה), ולא מבטיח יותר מדי. "מהיציאה" נשמע על יציאת מצרים בלי לאמר את זה.</div>
+    <div class="alts">
+      <div class="alt">מפסח לשבועות — 49 תנועות קטנות פנימה</div>
+      <div class="alt">49 ימים, מידה אחת ביום, שינוי אחד בפעם</div>
+      <div class="alt">עבודת מידות יומית — מפסח ועד שבועות</div>
+      <div class="alt">להגיע כל יום. לעצור רגע. ללכת קצת יותר שלם.</div>
+      <div class="alt">ספירת העומר — 49 ימים, 49 תנועות</div>
+    </div>
+  </div>
+
+  <div class="copy-block">
+    <div class="before">זה הזמן לשנות דפוסים ישנים</div>
+    <div class="problem">הבעיה: פרסומית. מציבה את המשתמש כמי שצריך לתקן משהו. מניפולטיבית. "זה הזמן" — מי אומר?</div>
+    <div class="after">כל יום אתגר אחד. כל אתגר — עם מידה אחת. עם שאלה אחת. עם פעולה אחת. ותו לא.</div>
+    <div class="reason">למה: תיאורי, לא שיפוטי. מסביר מה המוצר — לא מה הוא עושה למשתמש. "ותו לא" מציב ביטחון: לא תוצף, לא תוטרד.</div>
+  </div>
+
+  <!-- ── about text ── -->
+  <h3 style="font-size:17px;font-weight:700;margin:32px 0 12px;">ב. הטקסט הארוך (about / context)</h3>
+
+  <div class="callout red">
+    <div class="callout-label">האבחנה</div>
+    <p>הטקסט הנוכחי עושה ארבעה דברים במקביל: מסביר את ההקשר הלאומי, מספר מה המוצר, מנמק למה עכשיו, וקורא לפעולה — כולם ביחד. התוצאה היא טקסט כבד ומתיש שדורש עיבוד לפני שנכנסים לאפליקציה.</p>
+  </div>
+
+  <p><strong>עקרון:</strong> הטקסט הזה מתפצל לשלוש גרסאות שחיות בשלושה מקומות שונים.</p>
+
+  <div class="copy-block">
+    <div class="before">גרסה נוכחית: "מאז ה-7.10 אנחנו חיים במציאות כאוטית, הן ברמה האישית והן ברמה הלאומית. בימים אלה אנו זקוקים לקרקע יציבה לעמוד עליה..."</div>
+    <div class="problem">הבעיה: מציב את אוקטובר 7 כנקודת מוצא של המוצר — לא נכון כרונולוגית (המוצר קדם לכך), לא נכון כמסר (המוצר הוא עבודת מידות, לא תגובה לטראומה). הוא גם לא מדויק: "איחוי קרעים" — זה פוליטי יותר מפנימי.</div>
+    <div class="after">
+      <strong>גרסה 1 — onboarding קצרה (מסך כניסה):</strong><br><br>
+      ספירת העומר היא 49 ימים של עבודה פנימית — מהחירות של פסח אל קבלת התורה בשבועות.<br>
+      כל שבוע מידה. כל יום — תנועה אחת בתוכה.<br><br>
+      אתגר 49 הוא מיכל לריטואל הזה — יומיומי, קצר, מדויק.
+    </div>
+    <div class="reason">למה: פותח עם ההסבר של הפרקטיקה עצמה (לא עם אירוע חיצוני), מציב את המוצר כמיכל (לא כפתרון), ונותן למשתמש להחליט אם זה בשבילו.</div>
+  </div>
+
+  <div class="copy-block">
+    <div class="after">
+      <strong>גרסה 2 — about בינונית (מסך "קצת עלינו"):</strong><br><br>
+      ספירת העומר היא פרקטיקה יהודית של 49 ימים — כל יום ספירה, כל שבוע מידה.<br>
+      חסד, גבורה, תפארת, נצח, הוד, יסוד, מלכות.<br><br>
+      אנחנו לא המציאנו את זה. אנחנו פשוט בנינו מיכל שיעזור לך לעשות את זה — יום אחרי יום, בלי להצטיין, בלי להישאר אחור.<br><br>
+      כל יום אתגר אחד. קצר. מדויק. שיוצא מהמידה של אותו שבוע.<br>
+      לפעמים זה מוסיקה. לפעמים שאלה. לפעמים משפט שיושב איתך כל היום.
+    </div>
+    <div class="reason">למה: מכבד את הפרקטיקה, לא מציב את הצוות כגורו, ומסביר את המנגנון בלי יומרנות.</div>
+  </div>
+
+  <div class="copy-block">
+    <div class="after">
+      <strong>גרסה 3 — עומק מלאה (עמוד about נפרד, למי שרוצה):</strong><br><br>
+      יש שנים שיש בהן צורך גדול יותר בעבודה פנימית. 2024–2026 היו כאלה עבור רבים מאיתנו.<br><br>
+      ספירת העומר היא לא תרפיה ולא פתרון. היא פרקטיקה — דרך לשמור על עצמך בתנועה פנימה גם כשהכל סביבך בתנועה סוערת.<br><br>
+      המידות — חסד, גבורה, תפארת ועוד — הן לא מושגים מופשטים. הן שאלות חיות: איפה אני קשה יותר מדי? איפה אני נותן יותר מדי מעצמי? איפה אני לא נוכח?<br><br>
+      אתגר 49 יצא לדרך בפסח הראשון אחרי אוקטובר 2023. הוא חזר ב-2024 ושוב ב-2025. כל שנה קצת יותר מדויק, קצת יותר קשוב.<br><br>
+      400+ אנשים עושים את הספירה הזו יחד. לא כדי להפוך לאנשים טובים יותר — אלא כדי להכיר קצת יותר את עצמם.
+    </div>
+    <div class="reason">למה: מכיר בהקשר הישראלי (אוקטובר) בלי לעשות ממנו נקודת מוצא. מציב את הצוות כאנשים שעושים גם הם את הריטואל, לא כמומחים. "לא כדי להפוך לאנשים טובים יותר" — ניסוח שמוריד לחץ.</div>
+  </div>
+
+  <!-- ── challenge text ── -->
+  <h3 style="font-size:17px;font-weight:700;margin:32px 0 12px;">ג. Challenge text — ניסוח האתגר היומי</h3>
+
+  <p>דוגמה עם "לשמוע מבלי לפתור" (יום 1, חסד שבחסד):</p>
+
+  <table class="tbl">
+    <tr><th>חלק</th><th>גרסה נוכחית</th><th>גרסה מוצעת</th><th>למה</th></tr>
+    <tr>
+      <td>כותרת</td>
+      <td class="bad">לשמוע<br>מבלי לפתור</td>
+      <td class="good">לשמוע<br>בלי לפתור</td>
+      <td class="why">"בלי" טבעי יותר מ"מבלי" בדיבור ישראלי. "מבלי" מרגיש ספרותי מדי.</td>
+    </tr>
+    <tr>
+      <td>eyebrow (ch-eye)</td>
+      <td class="bad">האתגר</td>
+      <td class="good">האתגר של היום</td>
+      <td class="why">מדגיש שזה יומי — לא תמידי, לא עם לחץ. "של היום" מגדיר גבול.</td>
+    </tr>
+    <tr>
+      <td>גוף האתגר</td>
+      <td class="bad">בחר שיחה אחת היום שבה אתה רק מקשיב. לא מחכה לתורך. לא מכין תגובה. רק שם.</td>
+      <td class="good">בחר שיחה אחת היום — ובה תהיה רק שם.<br>לא מכין מה לאמר אחריו. לא ממתין לתורך. רק מקשיב.</td>
+      <td class="why">הסדר חשוב: קודם "תהיה שם" (קל לתפוס), אחר כך הפירוט. "שם" בסוף מחזיר לעיקר.</td>
+    </tr>
+    <tr>
+      <td>context (ch-ctx)</td>
+      <td class="bad">להיות נוכח לגמרי עם מי שמולך — ללא עצה, ללא תיקון, ללא "אני יודע"</td>
+      <td class="good">הקשבה אמיתית היא מתנה נדירה — כי רוב הזמן אנחנו מחכים לתורנו.</td>
+      <td class="why">הגרסה הנוכחית שלילית שלוש פעמים ("ללא, ללא, ללא"). הגרסה החדשה מציבה מה כן — ומדגישה שזה קשה ונדיר (ולא מובן מאליו).</td>
+    </tr>
+  </table>
+
+  <p>חלופות לכותרת "לשמוע / בלי לפתור":</p>
+  <div class="copy-block">
+    <div class="alts">
+      <div class="alt">להקשיב בלי למהר לפתור</div>
+      <div class="alt">להישאר עם מה שעולה — בלי לתקן מיד</div>
+      <div class="alt">להיות שם בלי לדעת</div>
+      <div class="alt">לשמוע את מה שנאמר, לא רק את מה שאמרת</div>
+      <div class="alt">נוכחות — בלי מתכון</div>
+    </div>
+  </div>
+
+  <!-- ── Done CTA ── -->
+  <h3 style="font-size:17px;font-weight:700;margin:32px 0 12px;">ד. ה-Done CTA — לפני ואחרי</h3>
+
+  <table class="tbl">
+    <tr><th>מצב</th><th>נוכחי</th><th>מוצע</th><th>למה</th></tr>
+    <tr>
+      <td>לפני לחיצה</td>
+      <td class="bad">הייתי כאן</td>
+      <td class="good">הייתי כאן</td>
+      <td class="why">זה טוב. שמור. ✓</td>
+    </tr>
+    <tr>
+      <td>Streak 0 (יום ראשון)</td>
+      <td class="bad">יום ראשון — כל המסעות מתחילים פה</td>
+      <td class="good">יום א׳ · ספירה ראשונה</td>
+      <td class="why">קצר, מדויק, ריטואלי. "כל המסעות" — נבואי מדי.</td>
+    </tr>
+    <tr>
+      <td>Streak 1–6</td>
+      <td class="bad">2 ימים ברצף ·</td>
+      <td class="good">יום שני ברצף — כן ממשיכים</td>
+      <td class="why">מוסיף חום ("כן ממשיכים") בלי להיות מניפולטיבי. "·" כנקודה תלויה — נראה לא גמור.</td>
+    </tr>
+    <tr>
+      <td>Streak 7</td>
+      <td class="bad">7 ימים ברצף ·</td>
+      <td class="good">שבוע שלם — חסד שלם</td>
+      <td class="why">ממנף את שם השבוע. מרגיש כמו אבן דרך.</td>
+    </tr>
+    <tr>
+      <td>אחרי לחיצה</td>
+      <td class="bad">הייתי כאן · יום ג׳</td>
+      <td class="good">הייתי כאן · יום ג׳ של הספירה</td>
+      <td class="why">מוסיף את הפרמינג הריטואלי. "של הספירה" = זה לא רק checkmark, זה ספירה.</td>
+    </tr>
+    <tr>
+      <td>Tomorrow peek — sub</td>
+      <td class="bad">האתגר המלא מתגלה עם השקיעה</td>
+      <td class="good">מחר · גבורה שבחסד<br><span style="font-size:12px;color:#72728A">האתגר יתגלה עם שקיעת הלילה</span></td>
+      <td class="why">שם הספירה = אנטיציפציה. "שקיעת הלילה" = יפה יותר מ"שקיעה".</td>
+    </tr>
+    <tr>
+      <td>Email placeholder</td>
+      <td class="bad">אימייל לתזכורת מחר</td>
+      <td class="good">כתובת מייל לתזכורת ב-17:30</td>
+      <td class="why">שעה ספציפית = אמינות. יודעים מתי ישלחו. לא עמומי.</td>
+    </tr>
+    <tr>
+      <td>Email success</td>
+      <td class="bad">✓ נשלח · נזכיר לך מחר יום ד׳</td>
+      <td class="good">קיבלנו. נזכיר לך מחר לפני השקיעה.</td>
+      <td class="why">"קיבלנו" = חם. "לפני השקיעה" = מחבר לריטואל.</td>
+    </tr>
+  </table>
+
+  <!-- ── navigation ── -->
+  <h3 style="font-size:17px;font-weight:700;margin:32px 0 12px;">ה. טקסטי navigation</h3>
+
+  <table class="tbl">
+    <tr><th>אלמנט</th><th>נוכחי</th><th>מוצע</th><th>הערה</th></tr>
+    <tr>
+      <td>כפתור חזרה</td>
+      <td class="bad">אתמול</td>
+      <td class="good">יום ב׳ ← (מספר דינמי)</td>
+      <td class="why">יותר מדויק, יודעים לאן הולכים.</td>
+    </tr>
+    <tr>
+      <td>כפתור קדימה (לפני done)</td>
+      <td class="bad">מחר (locked)</td>
+      <td class="good">יום ד׳ — זמין אחרי הספירה</td>
+      <td class="why">מסביר את הנעילה בלי לחסום.</td>
+    </tr>
+    <tr>
+      <td>כפתור קדימה (אחרי done)</td>
+      <td class="bad">מחר</td>
+      <td class="good">יום ד׳ ←</td>
+      <td class="why">עקביות עם החזרה.</td>
+    </tr>
+    <tr>
+      <td>map modal title</td>
+      <td class="bad">המסע שלך</td>
+      <td class="good">המסע שלך — 49 ימים</td>
+      <td class="why">מוסיף את הסקאלה.</td>
+    </tr>
+    <tr>
+      <td>map modal sub</td>
+      <td class="bad">יום 3 מתוך 49 · עוד 46 ימים לשבועות</td>
+      <td class="good">יום ג׳ · עוד 46 ספירות לשבועות</td>
+      <td class="why">"ספירות" ריטואלי יותר מ"ימים".</td>
+    </tr>
+    <tr>
+      <td>week label (bottom nav)</td>
+      <td class="bad">שבועות (8px uppercase)</td>
+      <td class="good">— (מחיקה)</td>
+      <td class="why">הספרות + השמות מספיקים. Label מיותר ב-8px.</td>
+    </tr>
+  </table>
+
+  <!-- ── sections ── -->
+  <h3 style="font-size:17px;font-weight:700;margin:32px 0 12px;">ו. אזורי עומק — להעמיק, לשאול, שיר, וידאו</h3>
+
+  <table class="tbl">
+    <tr><th>אלמנט</th><th>נוכחי</th><th>מוצע</th><th>למה</th></tr>
+    <tr>
+      <td>section divider</td>
+      <td class="bad">רוצה להעמיק?</td>
+      <td class="good">כשיש עוד זמן ·</td>
+      <td class="why">לא שאלה (שמחייבת תשובה), לא הצעת מכירה. פשוט: "הנה עוד, אם יש לך".</td>
+    </tr>
+    <tr>
+      <td>להעמיק — eyebrow</td>
+      <td class="bad">להעמיק</td>
+      <td class="good">להעמיק</td>
+      <td class="why">עובד. שמור.</td>
+    </tr>
+    <tr>
+      <td>להעמיק — meta</td>
+      <td class="bad">קריאה · 3 דקות</td>
+      <td class="good">3 דקות קריאה</td>
+      <td class="why">סדר טבעי יותר.</td>
+    </tr>
+    <tr>
+      <td>לשאול את עצמי</td>
+      <td class="bad">לשאול את עצמי</td>
+      <td class="good">לשאול את עצמי</td>
+      <td class="why">עובד. שמור.</td>
+    </tr>
+    <tr>
+      <td>שיר — eyebrow</td>
+      <td class="bad">שיר היום</td>
+      <td class="good">שיר היום</td>
+      <td class="why">עובד. שמור.</td>
+    </tr>
+    <tr>
+      <td>וידאו — ללא כותרת</td>
+      <td class="bad">(ריק)</td>
+      <td class="good">[שם הספירה] — [תיאור קצר]<br>דוגמה: "חסד שבחסד — ההקשבה כמתנה"</td>
+      <td class="why">חובה. בלי כותרת — placeholder.</td>
+    </tr>
+  </table>
+
+  <!-- ── WhatsApp ── -->
+  <h3 style="font-size:17px;font-weight:700;margin:32px 0 12px;">ז. WhatsApp CTA</h3>
+
+  <div class="copy-block">
+    <div class="before">הצטרפו לקבוצת הוואטסאפ שלנו, יחד עם מעל ל-350 משתתפים</div>
+    <div class="problem">הבעיה: "הצטרפו אלינו" = sales. "מעל ל-350" = social proof אגרסיבי. ממוקם בדף הכניסה — לפני שהמשתמש יודע מה הוא נכנס אליו.</div>
+    <div class="after">
+      <strong>גרסה 1 (אחרי done, כשהמשתמש כבר בפנים):</strong><br>
+      יש קבוצת WhatsApp שבה אנשים חולקים את האתגרים האלה ביחד. מעל 350 אנשים.<br>
+      אם אתה רוצה לעשות את זה עם עוד אנשים — אנחנו שם.
+    </div>
+    <div class="reason">למה: לא מוכר, לא מספר בגדול. "אנחנו שם" = חם, לא פורמלי. מיקום: רק אחרי שמישהו סיים אתגר.</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     שלב 4 — ארכיטקטורת תוכן
+     ═══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-num">שלב 04</div>
+  <h2 class="sec-title">ארכיטקטורת תוכן — מה הולך לאן</h2>
+
+  <p>כל אלמנט תוכן שייך לאחד משלושה שכבות:</p>
+
+  <table class="tbl">
+    <tr>
+      <th>שכבה</th>
+      <th>מה שייך לכאן</th>
+      <th>מתי מוצג</th>
+    </tr>
+    <tr>
+      <td><strong>שכבה 1 — ריטואל</strong><br><span style="font-size:11px;color:var(--soft)">חובה, above the fold</span></td>
+      <td>שם הספירה, האתגר, כפתור "הייתי כאן", streak</td>
+      <td>תמיד, מיד עם כניסה</td>
+    </tr>
+    <tr>
+      <td><strong>שכבה 2 — עומק</strong><br><span style="font-size:11px;color:var(--soft)">optional, פתיחה בלחיצה</span></td>
+      <td>קריאה (להעמיק), שאלות עצמיות, וידאו, שיר</td>
+      <td>אחרי האתגר, scroll down</td>
+    </tr>
+    <tr>
+      <td><strong>שכבה 3 — קהילה</strong><br><span style="font-size:11px;color:var(--soft)">optional, רק אחרי done</span></td>
+      <td>WhatsApp CTA, שיתוף, email reminder</td>
+      <td>רק אחרי לחיצה על "הייתי כאן"</td>
+    </tr>
+  </table>
+
+  <div class="callout gold">
+    <div class="callout-label">עיקרון</div>
+    <p>שכבה 3 לא קיימת אם לא עשית שכבה 1. המשתמש שלא סיים את האתגר לא רואה קהילה, לא רואה וואטסאפ. הוא לא אמור להרגיש שהוא מחמיץ משהו.</p>
+  </div>
+
+  <h3 style="font-size:17px;font-weight:700;margin:28px 0 12px;">מסכים — מה קיים ומה חסר</h3>
+
+  <table class="tbl">
+    <tr><th>מסך</th><th>קיים?</th><th>מה חסר / מה לשנות</th></tr>
+    <tr>
+      <td>מסך היום</td>
+      <td class="good">✓</td>
+      <td>סדר רכיבים (נתקן), divider בין שכבה 1 ל-2</td>
+    </tr>
+    <tr>
+      <td>מסך כניסה / onboarding</td>
+      <td class="bad">✗ חסר</td>
+      <td>למשתמש חדש — מה זה, אחד מסך הסבר, כניסה מיידית ליום הנוכחי</td>
+    </tr>
+    <tr>
+      <td>about / קצת עלינו</td>
+      <td class="bad">טקסט ישן</td>
+      <td>לכתוב מחדש בשלוש גרסאות (ראה שלב 3)</td>
+    </tr>
+    <tr>
+      <td>summary שבועי</td>
+      <td class="bad">✗ חסר</td>
+      <td>ביום 7 / 14 / 21 וכו׳ — מסך קצר: "סיימת שבוע חסד. מה לקחת?"</td>
+    </tr>
+    <tr>
+      <td>מסך קהילה / WhatsApp</td>
+      <td class="bad">ממוקם בטעות</td>
+      <td>מקומו: לאחר done, בשכבה 3. לא בדף הכניסה.</td>
+    </tr>
+    <tr>
+      <td>מפה / מסע (49 ימים)</td>
+      <td class="good">✓ (map modal)</td>
+      <td>להוסיף: אחוז השלמה, שם השבוע הנוכחי</td>
+    </tr>
+    <tr>
+      <td>מסך day 49 (שבועות)</td>
+      <td class="bad">✗ חסר</td>
+      <td>ליום האחרון — חוויה מיוחדת. לא "עוד יום".</td>
+    </tr>
+  </table>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     שלב 5 — wireframe מילולי יומי
+     ═══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-num">שלב 05</div>
+  <h2 class="sec-title">Wireframe מילולי — מסך היום מלמעלה למטה</h2>
+
+  <p><strong>עיקרון מנחה:</strong> מה שנמצא above the fold (בלי גלילה, 667px) חייב לכלול את הריטואל המלא. הכל אחרי זה — אופציונלי.</p>
+
+  <div class="callout">
+    <div class="callout-label">iPhone SE (375×667) — above the fold</div>
+    <p>Header 56px + progress line 2px = 58px · Hero 80px · Challenge card ~130px · Streak + Done button ~110px = <strong>~378px סה"כ</strong>. נשאר שוליים. ✓</p>
+  </div>
+
+  <div class="wireframe">
+    <div class="wf-row">
+      <div class="wf-num">0</div>
+      <div class="wf-label">
+        <div class="wf-name">Header sticky</div>
+        <div class="wf-desc">שמאל: לוגו 49 · מרכז: "יום ג׳" גדול + "03:22 · עד שקיעה" קטן מתחת · ימין: icon map</div>
+      </div>
+      <div class="wf-tag above">תמיד</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">0.5</div>
+      <div class="wf-label">
+        <div class="wf-name">Progress line 2px</div>
+        <div class="wf-desc">קו דק בצבע השבוע, מתמלא לאורך היום. Sticky מתחת ל-header.</div>
+      </div>
+      <div class="wf-tag above">ambient</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">1</div>
+      <div class="wf-label">
+        <div class="wf-name">Pill קונטקסט</div>
+        <div class="wf-desc">שבוע חסד · תפארת שבחסד — ללא נקודה מנשמת. רק טקסט + צבע.</div>
+      </div>
+      <div class="wf-tag above">above fold</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">2</div>
+      <div class="wf-label">
+        <div class="wf-name">כותרת גיבור</div>
+        <div class="wf-desc">56px, 900 weight. מילה ראשונה בצבע השבוע. "לשמוע / בלי לפתור". ללא subtitle — עוברת לקארד.</div>
+      </div>
+      <div class="wf-tag above">above fold</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">3</div>
+      <div class="wf-label">
+        <div class="wf-name">Challenge card</div>
+        <div class="wf-desc">Eyebrow "האתגר של היום" · גוף האתגר 18px · Divider קו דק · Context text 13px קטן. רקע בצבע השבוע הבהיר.</div>
+      </div>
+      <div class="wf-tag above">above fold</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">4</div>
+      <div class="wf-label">
+        <div class="wf-name">Streak + "הייתי כאן"</div>
+        <div class="wf-desc">Flame icon + "[n] ימים ברצף" · כפתור "הייתי כאן" מלא ברוחב מלא. הכי חשוב בעמוד.</div>
+      </div>
+      <div class="wf-tag core">PRIMARY ACTION</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">5</div>
+      <div class="wf-label">
+        <div class="wf-name">Done state (מוסתר עד לחיצה)</div>
+        <div class="wf-desc">אנימציית confetti → Tomorrow peek (ספירה מחר + "יתגלה עם שקיעת הלילה") → Email row (אופציונלי). מחלחל ממטה.</div>
+      </div>
+      <div class="wf-tag hidden">נגלה אחרי done</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">6</div>
+      <div class="wf-label">
+        <div class="wf-name">Divider "כשיש עוד זמן ·"</div>
+        <div class="wf-desc">קו + טקסט. מגדיר בבירור שמה שמתחת הוא שכבה שנייה.</div>
+      </div>
+      <div class="wf-tag optional">מעבר שכבות</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">7</div>
+      <div class="wf-label">
+        <div class="wf-name">Video block</div>
+        <div class="wf-desc">עם כותרת overlay בתחתית. "חסד שבחסד — ההקשבה כמתנה" + משך זמן. Play ring במרכז.</div>
+      </div>
+      <div class="wf-tag optional">optional</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">8</div>
+      <div class="wf-label">
+        <div class="wf-name">להעמיק (accordion)</div>
+        <div class="wf-desc">Icon + "להעמיק" + "3 דקות קריאה". Collapsed. פותח עם max-height animation.</div>
+      </div>
+      <div class="wf-tag optional">optional</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">9</div>
+      <div class="wf-label">
+        <div class="wf-name">לשאול את עצמי (accordion)</div>
+        <div class="wf-desc">Icon + "לשאול את עצמי" + "3 שאלות". Collapsed.</div>
+      </div>
+      <div class="wf-tag optional">optional</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">10</div>
+      <div class="wf-label">
+        <div class="wf-name">שיר היום</div>
+        <div class="wf-desc">אלבום thumb + שם שיר + אמן + play button. לא accordion — כרטיס ישיר לנגן.</div>
+      </div>
+      <div class="wf-tag optional">optional</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">11</div>
+      <div class="wf-label">
+        <div class="wf-name">Nav ← / →</div>
+        <div class="wf-desc">שני כפתורים שווים (secondary). "יום ב׳ ←" + "יום ד׳ →". ימין נעול עד done.</div>
+      </div>
+      <div class="wf-tag optional">ניווט</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-num">12</div>
+      <div class="wf-label">
+        <div class="wf-name">WhatsApp CTA (רק אחרי done)</div>
+        <div class="wf-desc">מוסתר לגמרי לפני done. אחרי done: כרטיס קטן אחרון "יש קבוצת WhatsApp — אם אתה רוצה".</div>
+      </div>
+      <div class="wf-tag hidden">נגלה אחרי done</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:17px;font-weight:700;margin:32px 0 12px;">רגע ה-Done — כך הוא מתרחש</h3>
+
+  <p><strong>לפני לחיצה:</strong> כפתור "הייתי כאן" בצבע השבוע. streak קטן מעליו. Done state מוסתר לגמרי.</p>
+  <p><strong>רגע הלחיצה:</strong> scale down 0.97 → חזרה. צבע עובר ל-#4CAF78 (success green) ב-300ms. הטקסט משתנה ל"הייתי כאן · יום ג׳ של הספירה".</p>
+  <p><strong>100ms לאחר:</strong> Confetti עולה — לא emoji צעקנית. נקודות ·✦· בצבעי השבוע. שקט, לא מצעד.</p>
+  <p><strong>600ms לאחר:</strong> Tomorrow peek מחלחל ממטה (opacity 0→1, translate 8px→0). ספירת המחרת + "יתגלה עם שקיעת הלילה".</p>
+  <p><strong>750ms לאחר:</strong> Email row מחלחל. Placeholder: "כתובת מייל לתזכורת ב-17:30".</p>
+  <p><strong>1500ms לאחר:</strong> WhatsApp CTA מחלחל בתחתית.</p>
+  <p><strong>מה מונע "סתם סימון וי":</strong> הרגע הוא לא instant — יש חביון מכוון בין הלחיצה לתוצאה. זה לא toggle. זה מעבר. הצבע מתחלף בהדרגה, לא ברצף. הטקסט מציין "יום ג׳ <em>של הספירה</em>" — מחזיר את המשתמש לפרמינג הריטואלי.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     שלב 6 — החלטות עיצוב
+     ═══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-num">שלב 06</div>
+  <h2 class="sec-title">החלטות עיצוב — כל אחת עם עלות ותועלת</h2>
+
+  <div class="decision yes">
+    <div class="dec-verdict yes">חובה ✓</div>
+    <div class="dec-q">"מחר" חסום עד להשלמה</div>
+    <div class="dec-body">
+      <strong>תועלת:</strong> מחזק את הריטואל היומי. "אתה כאן עכשיו" — לא בורח קדימה.<br>
+      <strong>מחיר:</strong> משתמשים שרוצים לדפדף ללא כוונה לסיים — מתסכל.<br>
+      <strong>קביעה:</strong> שווה את המחיר. tooltip "זמין אחרי הספירה" מסביר בלי לכעוס.
+    </div>
+  </div>
+
+  <div class="decision yes">
+    <div class="dec-verdict yes">חובה ✓</div>
+    <div class="dec-q">WhatsApp CTA רק אחרי done, לא בדף כניסה</div>
+    <div class="dec-body">
+      <strong>תועלת:</strong> הופך את ה-CTA מ"שיווק" ל"הזמנה מבפנים". מי שסיים — הוא כבר "בפנים".<br>
+      <strong>מחיר:</strong> פחות חשיפה ל-CTA. פחות הצטרפויות קרות.<br>
+      <strong>קביעה:</strong> מי שמצטרף אחרי done הוא משתמש איכותי יותר. עדיף.
+    </div>
+  </div>
+
+  <div class="decision yes">
+    <div class="dec-verdict yes">חובה ✓</div>
+    <div class="dec-q">ה-done state שומר ב-localStorage (אנונימי)</div>
+    <div class="dec-body">
+      <strong>תועלת:</strong> אין friction של הרשמה. streak עובד. מי שחוזר — רואה שסיים.<br>
+      <strong>מחיר:</strong> לא עובר בין מכשירים. משתמש עם מכשיר חדש מתחיל מאפס.<br>
+      <strong>קביעה:</strong> הרשמה מגדילה drop-off. localStorage מספיק לרוב המשתמשים. email = bridge.
+    </div>
+  </div>
+
+  <div class="decision discuss">
+    <div class="dec-verdict discuss">כדאי לשקול ◆</div>
+    <div class="dec-q">הוידאו מוצג רק אחרי completion</div>
+    <div class="dec-body">
+      <strong>תועלת:</strong> מדגיש שהאתגר הוא הפעולה, לא הצפייה. הוידאו הוא reward.<br>
+      <strong>מחיר:</strong> מי שמגיע ל-done ולא רוצה לראות — לא נוגע בוידאו בכלל.<br>
+      <strong>המלצה:</strong> להשאיר לפני done אבל עם divider "כשיש עוד זמן ·". לא לנעול.
+    </div>
+  </div>
+
+  <div class="decision yes">
+    <div class="dec-verdict yes">חובה ✓</div>
+    <div class="dec-q">summary שבועי ביום 7</div>
+    <div class="dec-body">
+      <strong>תועלת:</strong> מסמן אבן דרך. מי שעשה שבוע שלם — קיבל recognition. מניע לשבוע הבא.<br>
+      <strong>מחיר:</strong> פיתוח נוסף. תוכן נוסף ל-7 מסכים.<br>
+      <strong>המלצה:</strong> לבנות גרסה פשוטה: "סיימת שבוע חסד · מה נלקח?" + שאלה אחת לסיכום.
+    </div>
+  </div>
+
+  <div class="decision discuss">
+    <div class="dec-verdict discuss">כדאי לשקול ◆</div>
+    <div class="dec-q">onboarding למשתמש חדש</div>
+    <div class="dec-body">
+      <strong>תועלת:</strong> מי שמגיע לאתגר 49 ביום 15 — לא יודע מה זה, מה מחכה לו, איך לקרוא את הספירה.<br>
+      <strong>מחיר:</strong> מסך נוסף שמעכב כניסה לתוכן.<br>
+      <strong>המלצה:</strong> onboarding = 3 כרטיסיות, skip בכל שלב. "מה זה הספירה · איך זה עובד · הנה יום ג׳ שלך".
+    </div>
+  </div>
+
+  <div class="decision no">
+    <div class="dec-verdict no">לא מומלץ</div>
+    <div class="dec-q">הרשמה לפני גישה לתוכן</div>
+    <div class="dec-body">
+      <strong>בעיה:</strong> כל רגיסטריישן = drop-off. זה מוצר ריטואל יומי, לא שירות subscription.<br>
+      <strong>חלופה:</strong> email מרצון אחרי done. הצטרפות לוואטסאפ = "הרשמה חברתית" וולונטרית.
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     שלב 7 — UX/UI המלצות
+     ═══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-num">שלב 07</div>
+  <h2 class="sec-title">UX/UI — המלצות קונקרטיות</h2>
+
+  <h3 style="font-size:17px;font-weight:700;margin:0 0 16px;">היררכיה ומשקל</h3>
+  <table class="tbl">
+    <tr><th>אלמנט</th><th>עכשיו</th><th>מוצע</th></tr>
+    <tr><td>כותרת גיבור</td><td>clamp(40, 11vw, 56px) 900</td><td>שמור. עובד.</td></tr>
+    <tr><td>גוף האתגר</td><td>18px 600</td><td>20px 700 — הכי חשוב אחרי הכותרת.</td></tr>
+    <tr><td>ch-ctx (context)</td><td>13px 300</td><td>14px 300 — קצת יותר קריא.</td></tr>
+    <tr><td>כפתור Done</td><td>16px 700 min-height 56px</td><td>17px 700 min-height 60px — מעט גדול יותר, מרגיש כמו מעשה.</td></tr>
+    <tr><td>streak text</td><td>12px 300</td><td>13px 400 — מעט יותר נוכח.</td></tr>
+    <tr><td>header day</td><td>13px 700</td><td>15px 700 — הספרה הזו צריכה להיות ברורה.</td></tr>
+    <tr><td>header time</td><td>10px 300</td><td>10px 300 — שמור. עדין, לא צועק.</td></tr>
+  </table>
+
+  <h3 style="font-size:17px;font-weight:700;margin:24px 0 16px;">spacing — חוקים נוספים</h3>
+  <table class="tbl">
+    <tr><th>בין</th><th>עכשיו</th><th>מוצע</th></tr>
+    <tr><td>Hero לאתגר</td><td>16px (--s2)</td><td>12px — צמוד יותר. הם שייכים זה לזה.</td></tr>
+    <tr><td>אתגר לDone zone</td><td>24px (--s3)</td><td>20px — עדיין נשימה, אבל יותר צמוד.</td></tr>
+    <tr><td>Done לDivider</td><td>32px (--s4)</td><td>40px — יותר הפרדה. אחרי Done → שינוי מצב ויזואלי.</td></tr>
+    <tr><td>בין accordions</td><td>8px</td><td>8px — שמור.</td></tr>
+  </table>
+
+  <h3 style="font-size:17px;font-weight:700;margin:24px 0 16px;">מה להוריד ומה להשקיט</h3>
+  <table class="tbl">
+    <tr><th>אלמנט</th><th>פעולה</th><th>למה</th></tr>
+    <tr><td>נקודה מנשמת (ctx-dot)</td><td class="tag del">למחוק</td><td>motion theft. כבר נמחק ✓</td></tr>
+    <tr><td>Label "שבועות" ב-nav</td><td class="tag del">למחוק</td><td>8px ולא קריא. הספרות מספיקות.</td></tr>
+    <tr><td>✦ decorative בchallenge card</td><td class="tag">להשקיט</td><td>opacity .04 (במקום .065). פחות זועק.</td></tr>
+    <tr><td>sunrise/sunset icon בheader</td><td class="tag">להשקיט</td><td>stroke 0.9 (דק יותר).</td></tr>
+    <tr><td>כפתור "אתמול/מחר" — border</td><td class="tag">להשקיט</td><td>border 0.5px (במקום 1px). יותר עדין.</td></tr>
+    <tr><td>confetti emoji (✨🌿💛)</td><td class="tag rewrite">לשנות</td><td>נקודות ·✦· בצבעי השבוע בלבד. עקבי עם שפת העיצוב.</td></tr>
+  </table>
+
+  <h3 style="font-size:17px;font-weight:700;margin:24px 0 16px;">sunset / שקיעה</h3>
+  <p>ה-progress line 2px + header time עובדים. שתי הערות:</p>
+  <p>1. <strong>כשה-timer מתחת ל-30 דקות</strong> — לא רק pulse. גם הchallengecard עצמה מקבלת border עדין בצבע השבוע (box-shadow). "הזמן הזה עוד לפה — אבל לא לאורך זמן".</p>
+  <p>2. <strong>בדיוק בשקיעה</strong> — transition של רקע הדף ל-wb של השבוע הבא. 8 שניות. עדין. "יום חדש מתחיל".</p>
+
+  <h3 style="font-size:17px;font-weight:700;margin:24px 0 16px;">map modal — שיפורים</h3>
+  <p>כרגע: grid של עיגולים. חסר: תחושת מסע. הצעות:</p>
+  <p>1. הוסף אחוז השלמה: "33% מהמסע" בכותרת המשנה.</p>
+  <p>2. שם השבוע הנוכחי מודגש בwidth מלא מעל ה-row שלו (לא רק label קטן).</p>
+  <p>3. ימים שלא הושלמו (אבל עברו) — צבע שונה מ-future. "הוחמץ" בלי לכעוס — עיגול עם border בלבד, לא מלא.</p>
+
+  <h3 style="font-size:17px;font-weight:700;margin:24px 0 16px;">week switcher — שיפורים</h3>
+  <p>עובד. שלוש הוספות קטנות:</p>
+  <p>1. מחיקת label "שבועות" — חוסכת מקום, לא תורמת.</p>
+  <p>2. week הנוכחי — הספרה מעט גדולה יותר (15px, לא 13px).</p>
+  <p>3. weeks עתידיות — opacity .45 (לא .6). יותר ברור שהם "עוד לא".</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     שלב 8 — רשימות סיכום
+     ═══════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-num">שלב 08</div>
+  <h2 class="sec-title">רשימות סיכום</h2>
+
+  <div class="list-section">
+    <div class="list-card del">
+      <h4 class="del">למחוק ✕</h4>
+      <ul>
+        <li>הטקסט הנוכחי של about (כולו)</li>
+        <li>"ברוכים הבאים לאתגר 49"</li>
+        <li>"זה הזמן לשנות דפוסים ישנים"</li>
+        <li>"אתם איתנו?" (sales)</li>
+        <li>נקודה מנשמת בpill</li>
+        <li>Label "שבועות" ב-8px</li>
+        <li>WhatsApp CTA בדף כניסה</li>
+        <li>emoji בconfetti (✨🌿💛)</li>
+        <li>direction: ltr בemail input</li>
+        <li>"12 דקות · חסד שבחסד" (meta שגוי)</li>
+      </ul>
+    </div>
+
+    <div class="list-card keep">
+      <h4 class="keep">להשאיר ✓</h4>
+      <ul>
+        <li>צבעי שבועות ירוק→זהב</li>
+        <li>"הייתי כאן" כ-CTA</li>
+        <li>שמות הסעיפים: להעמיק / לשאול / שיר</li>
+        <li>SVG line icons</li>
+        <li>מבנה כותרת: [מילה] / [ביטוי]</li>
+        <li>Streak counter (עם שיפור קופי)</li>
+        <li>Tomorrow peek (עם תיקון נתונים)</li>
+        <li>Header sticky + progress 2px</li>
+        <li>Week switcher בתחתית</li>
+        <li>Map modal (עם תוספות)</li>
+      </ul>
+    </div>
+
+    <div class="list-card rewrite">
+      <h4 class="rewrite">לנסח מחדש ↻</h4>
+      <ul>
+        <li>כל קופי הabout (3 גרסאות)</li>
+        <li>כותרת ראשית + כותרת משנה</li>
+        <li>Streak texts (0 / 1 / 7 / n)</li>
+        <li>Tomorrow peek sub-text</li>
+        <li>Email placeholder + success</li>
+        <li>WhatsApp CTA (מיקום + ניסוח)</li>
+        <li>Nav buttons (← יום ב׳)</li>
+        <li>Map subtitle + label</li>
+        <li>Ch-ctx (context מתחת לאתגר)</li>
+        <li>Video overlay title</li>
+      </ul>
+    </div>
+
+    <div class="list-card rebuild">
+      <h4 class="rebuild">לבנות מאפס ◆</h4>
+      <ul>
+        <li>Onboarding (3 steps) למשתמש חדש</li>
+        <li>Summary שבועי (יום 7, 14, 21...)</li>
+        <li>מסך שבועות — יום 49 מיוחד</li>
+        <li>מסך קהילה (לאחר done)</li>
+        <li>ה-CMS structure (Days + Weeks)</li>
+        <li>Sunset-aware routing (Velo)</li>
+        <li>Email reminder system</li>
+        <li>"הוחמץ" state במפה</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<p style="text-align:center;font-size:12px;color:var(--soft);">אתגר 49 · Redesign Document · April 2026</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+/**
+ * sunset.jsw — Backend web module
+ * Place at: backend/sunset.jsw in Wix Studio
+ *
+ * Calculates today's sunset time for a given location using the
+ * Hebcal Shabbat Times API (free, no key required).
+ *
+ * Called from frontend via: import { getSunsetTime } from 'backend/sunset'
+ *
+ * Wix backend modules run server-side (Node.js environment).
+ * They can make HTTP requests freely.
+ */
+
+import { fetch } from 'wix-fetch';
+
+const DEFAULT_LAT = 31.7683;  // Jerusalem
+const DEFAULT_LNG = 35.2137;
+
+/**
+ * Get today's sunset time for a location.
+ *
+ * @param {number} lat - Latitude (default: Jerusalem)
+ * @param {number} lng - Longitude (default: Jerusalem)
+ * @returns {Promise<{sunsetISO: string, sunsetMs: number, city: string}>}
+ *
+ * Example usage from frontend:
+ *   import { getSunsetTime } from 'backend/sunset';
+ *   const { sunsetMs } = await getSunsetTime(32.0853, 34.7818); // Tel Aviv
+ */
+export async function getSunsetTime(lat = DEFAULT_LAT, lng = DEFAULT_LNG) {
+  try {
+    // Hebcal API — returns zmanim (halachic times) for any lat/lng
+    const url = `https://www.hebcal.com/zmanim?cfg=json&lat=${lat}&lng=${lng}&tzid=Asia/Jerusalem`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`Hebcal API error: ${resp.status}`);
+
+    const data = await resp.json();
+
+    // tzeis = nightfall (3 stars visible) — preferred for end of Omer day
+    // shkiah = astronomical sunset
+    // Use shkiah for this product (more universally understood)
+    const sunsetISO = data.times?.shkiah || data.times?.tzeis;
+    if (!sunsetISO) throw new Error('No sunset time in response');
+
+    const sunsetMs = new Date(sunsetISO).getTime();
+
+    return {
+      sunsetISO,       // "2026-04-04T19:42:00+03:00"
+      sunsetMs,        // 1743778920000
+      city: data.location?.city || 'ישראל',
+      tz: data.location?.tzid  || 'Asia/Jerusalem',
+    };
+
+  } catch (err) {
+    console.error('getSunsetTime failed:', err.message);
+    // Fallback: estimate sunset at 19:30 local time
+    const fallback = new Date();
+    fallback.setHours(19, 30, 0, 0);
+    return {
+      sunsetISO: fallback.toISOString(),
+      sunsetMs:  fallback.getTime(),
+      city: 'ישראל (ברירת מחדל)',
+      tz: 'Asia/Jerusalem',
+    };
+  }
+}
+
+/**
+ * Get the current Omer day number, accounting for sunset.
+ * After today's sunset → returns tomorrow's day number.
+ *
+ * @param {number} lat
+ * @param {number} lng
+ * @returns {Promise<{dayNum: number, isAfterSunset: boolean, sunsetMs: number}>}
+ */
+export async function getOmerDayWithSunset(lat = DEFAULT_LAT, lng = DEFAULT_LNG) {
+  const OMER_START = new Date('2026-04-02T00:00:00+03:00');
+
+  const { sunsetMs } = await getSunsetTime(lat, lng);
+  const now = Date.now();
+
+  // Calendar day (midnight-based)
+  const todayMidnight = new Date();
+  todayMidnight.setHours(0, 0, 0, 0);
+  const startMidnight = new Date(OMER_START);
+  startMidnight.setHours(0, 0, 0, 0);
+
+  const calendarDay = Math.floor(
+    (todayMidnight - startMidnight) / 86400000
+  ) + 1;
+
+  const isAfterSunset = now >= sunsetMs;
+  const dayNum = isAfterSunset
+    ? Math.min(49, calendarDay + 1)
+    : Math.max(1, calendarDay);
+
+  return {
+    dayNum:        Math.max(1, Math.min(49, dayNum)),
+    isAfterSunset,
+    sunsetMs,
+    calendarDay:   Math.max(1, Math.min(49, calendarDay)),
+  };
+}
